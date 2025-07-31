@@ -76,4 +76,11 @@ jobs:
 
     - name: Run Unit Tests
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: ctest --build-config ${{ matrix.configuration }}
+      run: ctest --output-on-failure --build-config ${{ matrix.configuration }}
+
+    - name: Upload Test log artifact
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ctest-log
+        path: build/Testing/Temporary/LastTest.log
