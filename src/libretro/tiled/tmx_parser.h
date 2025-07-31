@@ -83,7 +83,7 @@ namespace retro::tiled
 			._class = pt.get<std::string>("<xmlattr>.class", ""),
 			._width = pt.get<std::int32_t>("<xmlattr>.width", 0),
 			._height = pt.get<std::int32_t>("<xmlattr>.height", 0),
-			//._data = parse<tmx::data>(pt.get_child("data")),
+			._data = {},
 			._properties = parse_properties(pt)
 		};
 	}
