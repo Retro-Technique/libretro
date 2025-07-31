@@ -58,6 +58,7 @@
 #pragma GCC diagnostic ignored "-Wsuggest-override"
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 
 #define STB_IMAGE_IMPLEMENTATION

@@ -60,6 +60,7 @@
 #pragma GCC diagnostic ignored "-Wsuggest-override"
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include <stb_image.h>
 #include <stb_image_write.h>
