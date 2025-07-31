@@ -82,7 +82,7 @@ namespace retro::math
 
 #pragma endregion
 
-		friend std::ostream& operator<<(std::ostream& stream, const matrix_stack<N>& stack) noexcept;
+		friend std::ostream& operator<< <>(std::ostream& stream, const matrix_stack<N>& stack) noexcept;
 
 	};
 
