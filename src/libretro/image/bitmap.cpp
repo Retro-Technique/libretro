@@ -82,7 +82,7 @@ namespace retro::image
 		stbi_uc* data = stbi_load(path.string().c_str(), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), nullptr, STBI_rgb_alpha);
 		if (!data)
 		{
-			throw std::runtime_error("Failed to load image: " + path.string() + " - " + stbi_failure_reason());
+			throw bitmap_runtime_error("Failed to load image: " + path.string() + " - " + stbi_failure_reason());
 		}
 
 		m_width = static_cast<std::size_t>(m_width);
@@ -106,13 +106,13 @@ namespace retro::image
 		stbi_uc* data = stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha);
 		if (!data)
 		{
-			throw std::runtime_error("Failed to load image from memory: " + std::string(stbi_failure_reason()));
+			throw bitmap_runtime_error("Failed to load image from memory: " + std::string(stbi_failure_reason()));
 		}
 
 		if (channel_count != 4)
 		{
 			stbi_image_free(data);
-			throw std::runtime_error("Image must have 4 channels (RGBA).");
+			throw bitmap_runtime_error("Image must have 4 channels (RGBA).");
 		}
 
 		m_pixels.assign(data, data + (m_width * m_height * 4));
@@ -155,7 +155,7 @@ namespace retro::image
 
 		if (ret == 0)
 		{
-			throw std::runtime_error("Failed to save image: " + path.string() + " - " + stbi_failure_reason());
+			throw bitmap_runtime_error("Failed to save image: " + path.string() + " - " + stbi_failure_reason());
 		}
 	}
 

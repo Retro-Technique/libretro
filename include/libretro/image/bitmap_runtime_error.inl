@@ -37,23 +37,26 @@
  *
  */
 
-#pragma once
+namespace retro::image
+{
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#define __LIBRETRO_IMAGE_H_INCLUDED__
+#pragma region Constructors
 
-#include "config.h"
+	inline bitmap_runtime_error::bitmap_runtime_error(const std::string& msg)
+		: std::runtime_error(msg)
+	{
+	}
 
-#include <iostream>
-#include <cstdint>
-#include <filesystem>
-#include <vector>
-#include <span>
+	inline bitmap_runtime_error::bitmap_runtime_error(const char* msg)
+		: std::runtime_error(msg)
+	{
+	}
 
-#include "image/export.h"
-#include "image/bitmap_runtime_error.h"
-#include "image/pixel.h"
-#include "image/bitmap.h"
-#include "image/color.h"
+	inline bitmap_runtime_error::bitmap_runtime_error(std::string_view msg)
+		: std::runtime_error(std::string(msg))
+	{
+	}
 
-#endif
+#pragma endregion
+
+}

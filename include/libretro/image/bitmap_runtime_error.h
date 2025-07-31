@@ -40,20 +40,26 @@
 #pragma once
 
 #ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#define __LIBRETRO_IMAGE_H_INCLUDED__
-
-#include "config.h"
-
-#include <iostream>
-#include <cstdint>
-#include <filesystem>
-#include <vector>
-#include <span>
-
-#include "image/export.h"
-#include "image/bitmap_runtime_error.h"
-#include "image/pixel.h"
-#include "image/bitmap.h"
-#include "image/color.h"
-
+#error "Do not include this file directly, include <libretro/image.h> instead."
 #endif
+
+namespace retro::image
+{
+
+	class bitmap_runtime_error : public std::runtime_error
+	{
+#pragma region Constructors
+
+	public:
+
+		explicit bitmap_runtime_error(const std::string& msg);
+		explicit bitmap_runtime_error(const char* msg);
+		explicit bitmap_runtime_error(std::string_view msg);
+		~bitmap_runtime_error() override = default;
+
+#pragma endregion
+	};
+
+}
+
+#include "bitmap_runtime_error.inl"
