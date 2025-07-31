@@ -62,7 +62,7 @@ namespace retro::image
 
 		m_width = width;
 		m_height = height;
-		m_pixels.resize(m_width * m_height * 4, color::ALPHA_TRANSPARENT);
+		m_pixels.resize(m_width * m_height * 4, pixel::ALPHA_TRANSPARENT);
 	}
 
 	void bitmap::load_from_file(const std::filesystem::path& path)
@@ -166,17 +166,17 @@ namespace retro::image
 		m_pixels.clear();
 	}
 
-	void bitmap::mask_from_color(const retro::image::color& color, std::uint8_t alpha) noexcept
+	void bitmap::mask_from_pixel(const retro::image::pixel& pixel, std::uint8_t alpha) noexcept
 	{
 		if (m_pixels.empty() || m_width == 0 || m_height == 0)
 		{
 			return;
 		}
 
-		retro::image::color* pixels = reinterpret_cast<retro::image::color*>(m_pixels.data());
+		retro::image::pixel* pixels = reinterpret_cast<retro::image::pixel*>(m_pixels.data());
 		for (std::size_t i = 0; i < size(); i++)
 		{
-			if (pixels[i].red == color.red && pixels[i].green == color.green && pixels[i].blue == color.blue)
+			if (pixels[i].red == pixel.red && pixels[i].green == pixel.green && pixels[i].blue == pixel.blue)
 			{
 				pixels[i].alpha = alpha;
 			}

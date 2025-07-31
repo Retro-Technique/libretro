@@ -85,7 +85,7 @@ namespace retro::image
 		void load_from_memory(const std::uint8_t* buffer, std::size_t size_bytes);
 		void save_to_file(const std::filesystem::path& path) const;
 		void clear() noexcept;
-		void mask_from_color(const retro::image::color& color, std::uint8_t alpha = retro::image::color::ALPHA_TRANSPARENT) noexcept;
+		void mask_from_pixel(const retro::image::pixel& pixel, std::uint8_t alpha = retro::image::pixel::ALPHA_TRANSPARENT) noexcept;
 		void flip_vertical() noexcept;
 		void flip_horizontal() noexcept;
 

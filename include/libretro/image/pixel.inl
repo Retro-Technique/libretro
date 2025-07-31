@@ -42,7 +42,7 @@ namespace retro::image
 
 #pragma region Constructors
 
-	constexpr color::color() noexcept
+	constexpr pixel::pixel() noexcept
 		: red(0)
 		, green(0)
 		, blue(0)
@@ -50,7 +50,7 @@ namespace retro::image
 	{
 	}
 
-	constexpr color::color(const color& other) noexcept
+	constexpr pixel::pixel(const pixel& other) noexcept
 		: red(other.red)
 		, green(other.green)
 		, blue(other.blue)
@@ -58,12 +58,12 @@ namespace retro::image
 	{
 	}
 
-	constexpr color::color(std::uint32_t value) noexcept
+	constexpr pixel::pixel(std::uint32_t value) noexcept
 	{
 		from_integer(value);
 	}
 
-	constexpr color::color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha) noexcept
+	constexpr pixel::pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha) noexcept
 		: red(red)
 		, green(green)
 		, blue(blue)
@@ -74,22 +74,22 @@ namespace retro::image
 #pragma endregion
 #pragma region Operations
 
-	[[nodiscard]] constexpr bool color::is_opaque() const noexcept
+	[[nodiscard]] constexpr bool pixel::is_opaque() const noexcept
 	{
 		return alpha == ALPHA_OPAQUE;
 	}
 
-	[[nodiscard]] constexpr bool color::is_transparent() const noexcept
+	[[nodiscard]] constexpr bool pixel::is_transparent() const noexcept
 	{
 		return alpha == ALPHA_TRANSPARENT;
 	}
 
-	[[nodiscard]] constexpr std::uint32_t color::to_integer() const noexcept
+	[[nodiscard]] constexpr std::uint32_t pixel::to_integer() const noexcept
 	{
 		return (red << 24) | (green << 16) | (blue << 8) | alpha;
 	}
 
-	constexpr void color::from_integer(std::uint32_t value) noexcept
+	constexpr void pixel::from_integer(std::uint32_t value) noexcept
 	{
 		red = static_cast<std::uint8_t>((value & 0xff000000) >> 24);
 		green = static_cast<std::uint8_t>((value & 0x00ff0000) >> 16);
@@ -100,9 +100,9 @@ namespace retro::image
 #pragma endregion
 #pragma region Overridables
 
-	[[nodiscard]] constexpr color color::operator+(const color& other) noexcept
+	[[nodiscard]] constexpr pixel pixel::operator+(const pixel& other) noexcept
 	{
-		return color(
+		return pixel(
 			static_cast<std::uint8_t>(std::min(red + other.red, 255)),
 			static_cast<std::uint8_t>(std::min(green + other.green, 255)),
 			static_cast<std::uint8_t>(std::min(blue + other.blue, 255)),
@@ -110,9 +110,9 @@ namespace retro::image
 		);
 	}
 
-	[[nodiscard]] constexpr color color::operator-(const color& other) noexcept
+	[[nodiscard]] constexpr pixel pixel::operator-(const pixel& other) noexcept
 	{
-		return color(
+		return pixel(
 			static_cast<std::uint8_t>(std::max(red - other.red, 0)),
 			static_cast<std::uint8_t>(std::max(green - other.green, 0)),
 			static_cast<std::uint8_t>(std::max(blue - other.blue, 0)),
@@ -120,9 +120,9 @@ namespace retro::image
 		);
 	}
 
-	[[nodiscard]] constexpr color color::operator*(const color& other) noexcept
+	[[nodiscard]] constexpr pixel pixel::operator*(const pixel& other) noexcept
 	{
-		return color(
+		return pixel(
 			static_cast<std::uint8_t>(red * other.red / 255),
 			static_cast<std::uint8_t>(green * other.green / 255),
 			static_cast<std::uint8_t>(blue * other.blue / 255),
@@ -130,22 +130,22 @@ namespace retro::image
 		);
 	}
 
-	constexpr color& color::operator+=(const color& other) noexcept
+	constexpr pixel& pixel::operator+=(const pixel& other) noexcept
 	{
 		return *this = *this + other;
 	}
 
-	constexpr color& color::operator-=(const color& other) noexcept
+	constexpr pixel& pixel::operator-=(const pixel& other) noexcept
 	{
 		return *this = *this - other;
 	}
 
-	constexpr color& color::operator*=(const color& other) noexcept
+	constexpr pixel& pixel::operator*=(const pixel& other) noexcept
 	{
 		return *this = *this * other;
 	}
 
-	[[nodiscard]] constexpr bool color::operator==(const color& other) const noexcept
+	[[nodiscard]] constexpr bool pixel::operator==(const pixel& other) const noexcept
 	{
 		return red == other.red &&
 			green == other.green &&
@@ -153,20 +153,20 @@ namespace retro::image
 			alpha == other.alpha;
 	}
 
-	[[nodiscard]] constexpr bool color::operator!=(const color& other) const noexcept
+	[[nodiscard]] constexpr bool pixel::operator!=(const pixel& other) const noexcept
 	{
 		return !(*this == other);
 	}
 
 #pragma endregion
 
-	inline std::ostream& operator<<(std::ostream& stream, const color& color) noexcept
+	inline std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept
 	{
-		return stream << "color(" 
-			<< color.red << ", "
-			<< color.green << ", "
-			<< color.blue << ", "
-			<< color.alpha << ")";
+		return stream << "pixel(" 
+			<< pixel.red << ", "
+			<< pixel.green << ", "
+			<< pixel.blue << ", "
+			<< pixel.alpha << ")";
 	}
 
 }

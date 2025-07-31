@@ -5,9 +5,9 @@ set(SRCROOT "${PROJECT_SOURCE_DIR}/src/libretro/image")
 
 set(SRC
 	"${INCROOT}/export.h"
+	"${INCROOT}/pixel.h"
+	"${INCROOT}/pixel.inl"
 	"${INCROOT}/color.h"
-	"${INCROOT}/color.inl"
-	"${INCROOT}/colors.h"
 	"${INCROOT}/bitmap.h"
 	"${SRCROOT}/bitmap.cpp"
 	"${SRCROOT}/pch.cpp"

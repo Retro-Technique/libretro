@@ -2,7 +2,7 @@ find_package(boost_unit_test_framework CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}-image-tests    
     "main.cpp" 
-    "color.test.cpp"
+    "pixel.test.cpp"
     "bitmap.test.cpp"
 )
 

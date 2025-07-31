@@ -40,19 +40,58 @@
 #pragma once
 
 #ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#define __LIBRETRO_IMAGE_H_INCLUDED__
-
-#include "config.h"
-
-#include <iostream>
-#include <cstdint>
-#include <filesystem>
-#include <vector>
-#include <span>
-
-#include "image/export.h"
-#include "image/pixel.h"
-#include "image/pixel.h"
-#include "image/bitmap.h"
-
+#error "Do not include this file directly, include <libretro/image.h> instead."
 #endif
+
+namespace retro::image
+{
+
+	struct pixel
+	{
+#pragma region Constructors
+
+		constexpr pixel() noexcept;
+		constexpr pixel(const pixel& other) noexcept;
+		constexpr explicit pixel(std::uint32_t value) noexcept;
+		constexpr explicit pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
+		~pixel() = default;
+
+#pragma endregion
+#pragma region Attributes
+
+		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
+		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
+
+		std::uint8_t red;
+		std::uint8_t green;
+		std::uint8_t blue;
+		std::uint8_t alpha;
+
+#pragma endregion
+#pragma region Operations
+
+		[[nodiscard]] constexpr bool is_opaque() const noexcept;
+		[[nodiscard]] constexpr bool is_transparent() const noexcept;
+		[[nodiscard]] constexpr std::uint32_t to_integer() const noexcept;
+		constexpr void from_integer(std::uint32_t value) noexcept;
+
+#pragma endregion
+#pragma region Overridables
+	
+		[[nodiscard]] constexpr pixel operator+(const pixel& other) noexcept;
+		[[nodiscard]] constexpr pixel operator-(const pixel& other) noexcept;
+		[[nodiscard]] constexpr pixel operator*(const pixel& other) noexcept;
+		constexpr pixel& operator+=(const pixel& other) noexcept;
+		constexpr pixel& operator-=(const pixel& other) noexcept;
+		constexpr pixel& operator*=(const pixel& other) noexcept;
+		[[nodiscard]] constexpr bool operator==(const pixel& other) const noexcept;
+		[[nodiscard]] constexpr bool operator!=(const pixel& other) const noexcept;
+
+#pragma endregion
+	};
+
+	std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept;
+
+}
+
+#include "pixel.inl"
