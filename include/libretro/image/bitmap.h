@@ -73,7 +73,7 @@ namespace retro::image
 		[[nodiscard]] constexpr std::size_t size() const noexcept { return m_width * m_height; }
 		[[nodiscard]] constexpr std::size_t size_bytes() const noexcept { return m_pixels.size(); }
 		[[nodiscard]] constexpr bool empty() const noexcept { return m_pixels.empty(); }
-		[[nodiscard]] constexpr std::span<const color> data() const noexcept { return std::span<const color>(reinterpret_cast<const color*>(m_pixels.data()), size()); }
+		[[nodiscard]] constexpr std::span<const std::uint8_t> data() const noexcept { return std::span<const std::uint8_t>(m_pixels.data(), size()); }
 		
 #pragma endregion
 #pragma region Operations
