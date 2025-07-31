@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_CASE(TSXReadTest)
 {
 	try
 	{
-		const retro::tiled::tsx::tileset tileset = retro::tiled::load_from_file<retro::tiled::tsx::tileset>(TESTS_RESOURCE_DIRECTORY "\\" "tileset_01.tsx");
+		const retro::tiled::tsx::tileset tileset = retro::tiled::load_from_file<retro::tiled::tsx::tileset>(TESTS_RESOURCE_DIRECTORY "/" "tileset_01.tsx");
 
 		BOOST_CHECK_EQUAL("1.11.2", tileset._tiledversion);
 		BOOST_CHECK_EQUAL("tileset_01", tileset._name);

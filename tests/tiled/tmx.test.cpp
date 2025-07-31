@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_CASE(TMXReadTest)
 {
 	try
 	{
-		const retro::tiled::tmx::map map = retro::tiled::load_from_file<retro::tiled::tmx::map>(TESTS_RESOURCE_DIRECTORY "\\" "room_01.tmx");
+		const retro::tiled::tmx::map map = retro::tiled::load_from_file<retro::tiled::tmx::map>(TESTS_RESOURCE_DIRECTORY "/" "room_01.tmx");
 
 		BOOST_CHECK_EQUAL("1.11.2", map._tiledversion);
 		BOOST_CHECK_EQUAL("orthogonal", map._orientation);
