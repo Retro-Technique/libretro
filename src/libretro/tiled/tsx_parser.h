@@ -39,55 +39,40 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
-#endif
+#include "parser.h"
 
-namespace retro::image
+namespace retro::tiled
 {
-	
-	class LIBRETRO_IMAGE_API bitmap
+
+	template<>
+	tsx::image parse<tsx::image>(const boost::property_tree::ptree& pt)
 	{
-#pragma region Constructors
+		return
+		{
+			._source = pt.get<std::string>("<xmlattr>.source", ""),
+			._trans = pt.get<std::string>("<xmlattr>.trans", ""),
+			._width = pt.get<std::int32_t>("<xmlattr>.width", 0),
+			._height = pt.get<std::int32_t>("<xmlattr>.height", 0)
+		};
+	}
 
-	public:
-
-		bitmap() noexcept;		
-		~bitmap() = default;
-
-#pragma endregion
-#pragma region Attributes
-
-	private:
-
-		std::vector<std::uint8_t> m_pixels;
-		std::size_t m_width;
-		std::size_t m_height;
-
-	public:
-
-		[[nodiscard]] constexpr std::size_t width() const noexcept { return m_width; }
-		[[nodiscard]] constexpr std::size_t height() const noexcept { return m_height; }
-		[[nodiscard]] constexpr std::size_t size() const noexcept { return m_width * m_height; }
-		[[nodiscard]] constexpr std::size_t size_bytes() const noexcept { return m_pixels.size(); }
-		[[nodiscard]] constexpr bool empty() const noexcept { return m_pixels.empty(); }
-		[[nodiscard]] constexpr std::span<const std::uint8_t> data() const noexcept { return std::span<const std::uint8_t>(m_pixels.data(), size()); }
-		
-#pragma endregion
-#pragma region Operations
-
-	public:
-		
-		void create(std::size_t width, std::size_t height);
-		void load_from_file(const std::filesystem::path& path);
-		void load_from_memory(const std::uint8_t* buffer, std::size_t size_bytes);
-		void save_to_file(const std::filesystem::path& path) const;
-		void clear() noexcept;
-		void mask_from_pixel(const retro::image::pixel& pixel, std::uint8_t alpha = retro::image::pixel::ALPHA_TRANSPARENT) noexcept;
-		void flip_vertical() noexcept;
-		void flip_horizontal() noexcept;
-
-#pragma endregion
-	};
+	template<>
+	tsx::tileset parse<tsx::tileset>(const boost::property_tree::ptree& pt)
+	{
+		return
+		{
+			._tiledversion = pt.get<std::string>("<xmlattr>.tiledversion", ""),
+			._name = pt.get<std::string>("<xmlattr>.name", ""),
+			._tilewidth = pt.get<std::int32_t>("<xmlattr>.tilewidth", 0),
+			._tileheight = pt.get<std::int32_t>("<xmlattr>.tileheight", 0),
+			._spacing = pt.get<std::int32_t>("<xmlattr>.spacing", 0),
+			._margin = pt.get<std::int32_t>("<xmlattr>.margin", 0),
+			._tilecount = pt.get<std::int32_t>("<xmlattr>.tilecount", 0),
+			._columns = pt.get<std::int32_t>("<xmlattr>.columns", 0),
+			._image = pt.get_child_optional("image")
+				? parse<tsx::image>(pt.get_child("image"))
+				: tsx::image{}
+		};
+	}
 
 }
