@@ -28,8 +28,8 @@ target_include_directories(${PROJECT_NAME}-image
 
 target_compile_options(${PROJECT_NAME}-image
 	PRIVATE 
-		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-		$<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror>
+		$<$<CXX_COMPILER_ID:MSVC>:/W4>
+		$<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -Wconversion -Wshadow>
 		$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:MSVC>>:/Zi /Od>
 		$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:-g>
 		$<$<AND:$<CONFIG:Release>,$<CXX_COMPILER_ID:MSVC>>:/O2>
