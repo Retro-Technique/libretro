@@ -41,5 +41,10 @@
 
 #include <libretro/image.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+
 #include <stb_image.h>
 #include <stb_image_write.h>
+
+#pragma GCC diagnostic pop
