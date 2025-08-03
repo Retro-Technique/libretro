@@ -1,7 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include <libretro/image.h>
 
-BOOST_AUTO_TEST_SUITE(pixelTests)
+BOOST_AUTO_TEST_SUITE(PixelTests)
 
 BOOST_AUTO_TEST_CASE(DefaultConstructor)
 {
