@@ -50,8 +50,12 @@ namespace retro::graphics
 	}
 
 	vertex_array::~vertex_array()
-	{
-		glDeleteVertexArrays(1, &m_id);
+	{		
+		if (m_id)
+		{
+			glDeleteVertexArrays(1, &m_id);
+			m_id = 0;
+		}
 	}
 
 #pragma endregion

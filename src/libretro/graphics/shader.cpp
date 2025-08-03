@@ -52,8 +52,12 @@ namespace retro::graphics
 	}
 
 	shader::~shader()
-	{
-		glDeleteProgram(m_id);
+	{		
+		if (m_id)
+		{
+			glDeleteProgram(m_id);
+			m_id = 0;
+		}
 	}
 
 #pragma endregion

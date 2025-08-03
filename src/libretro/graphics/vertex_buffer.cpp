@@ -49,11 +49,16 @@ namespace retro::graphics
 		glGenBuffers(1, &m_id);
 		glBindBuffer(GL_ARRAY_BUFFER, m_id);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size_bytes(), vertices.data(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	
 	vertex_buffer::~vertex_buffer()
-	{
-		glDeleteBuffers(1, &m_id);
+	{		
+		if (m_id)
+		{
+			glDeleteBuffers(1, &m_id);
+			m_id = 0;
+		}
 	}
 
 #pragma endregion

@@ -40,24 +40,39 @@
 #pragma once
 
 #ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
-#define __LIBRETRO_GRAPHICS_H_INCLUDED__
-
-#include "config.h"
-
-#include <string>
-
-#include <libretro/math.h>
-#include <libretro/image.h>
-
-#include "graphics/export.h"
-#include "graphics/vertex.h"
-#include "graphics/resource.h"
-#include "graphics/vertex_buffer.h"
-#include "graphics/vertex_array.h"
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "graphics/render_target.h"
-#include "graphics/window.h"
-#include "graphics/render_window.h"
-
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
+
+namespace retro::graphics
+{
+
+	class LIBRETRO_GRAPHICS_API texture : public resource
+	{
+#pragma region Constructors
+
+	public:
+
+		texture(const image::bitmap& bitmap, bool smooth = true, bool repeated = false) noexcept;
+		~texture();
+		texture(const texture&) = delete;
+		texture& operator=(const texture&) = delete;
+
+#pragma endregion
+#pragma region Operations
+
+	public:
+
+		void active(std::uint32_t slot = 0) const noexcept;
+
+#pragma endregion
+#pragma region Overridables
+
+	public:
+
+		void bind() const noexcept override;
+		void unbind() const noexcept override;
+
+#pragma endregion
+	};
+
+}
