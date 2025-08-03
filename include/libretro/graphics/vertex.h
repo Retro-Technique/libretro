@@ -39,61 +39,35 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
 
-namespace retro::image
+namespace retro::graphics
 {
 
-	struct pixel
+	struct vertex
 	{
 #pragma region Constructors
 
-		constexpr pixel() noexcept;
-		constexpr pixel(const pixel& other) noexcept;
-		constexpr explicit pixel(std::uint32_t value) noexcept;
-		constexpr explicit pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
-		~pixel() = default;
+		constexpr vertex() noexcept;
+		constexpr explicit vertex(const math::vector2f& position) noexcept;
+		constexpr vertex(const math::vector2f& position, const image::color& color) noexcept;
+		constexpr vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept;
+		constexpr vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept;
 
 #pragma endregion
 #pragma region Attributes
 
-		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
-		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
-
-		std::uint8_t red;
-		std::uint8_t green;
-		std::uint8_t blue;
-		std::uint8_t alpha;
-
-#pragma endregion
-#pragma region Operations
-
-		[[nodiscard]] constexpr bool is_opaque() const noexcept;
-		[[nodiscard]] constexpr bool is_transparent() const noexcept;
-		[[nodiscard]] constexpr std::uint32_t to_integer() const noexcept;
-		constexpr void from_integer(std::uint32_t value) noexcept;
-
-#pragma endregion
-#pragma region Overridables
-	
-		[[nodiscard]] constexpr pixel operator+(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator-(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator*(const pixel& other) noexcept;
-		constexpr pixel& operator+=(const pixel& other) noexcept;
-		constexpr pixel& operator-=(const pixel& other) noexcept;
-		constexpr pixel& operator*=(const pixel& other) noexcept;
-		[[nodiscard]] constexpr bool operator==(const pixel& other) const noexcept;
-		[[nodiscard]] constexpr bool operator!=(const pixel& other) const noexcept;
+		math::vector2f	_position;
+		image::color	_color;
+		math::vector2f	_tex_coords;
 
 #pragma endregion
 	};
 
-	using color = pixel;
-
-	std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const vertex& vertex) noexcept;
 
 }
 
-#include "pixel.inl"
+#include "vertex.inl"

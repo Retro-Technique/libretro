@@ -39,61 +39,50 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
 
-namespace retro::image
+namespace retro::graphics
 {
 
-	struct pixel
+	class LIBRETRO_GRAPHICS_API shader : public resource
 	{
 #pragma region Constructors
 
-		constexpr pixel() noexcept;
-		constexpr pixel(const pixel& other) noexcept;
-		constexpr explicit pixel(std::uint32_t value) noexcept;
-		constexpr explicit pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
-		~pixel() = default;
+	public:
 
-#pragma endregion
-#pragma region Attributes
-
-		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
-		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
-
-		std::uint8_t red;
-		std::uint8_t green;
-		std::uint8_t blue;
-		std::uint8_t alpha;
+		shader(std::string_view vertex_src, std::string_view fragment_src);
+		~shader();
+		shader(const shader&) = delete;
+		shader& operator=(const shader&) = delete;
 
 #pragma endregion
 #pragma region Operations
 
-		[[nodiscard]] constexpr bool is_opaque() const noexcept;
-		[[nodiscard]] constexpr bool is_transparent() const noexcept;
-		[[nodiscard]] constexpr std::uint32_t to_integer() const noexcept;
-		constexpr void from_integer(std::uint32_t value) noexcept;
+	public:
+
+		std::int32_t uniform_location(std::string_view name) const noexcept;
 
 #pragma endregion
 #pragma region Overridables
-	
-		[[nodiscard]] constexpr pixel operator+(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator-(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator*(const pixel& other) noexcept;
-		constexpr pixel& operator+=(const pixel& other) noexcept;
-		constexpr pixel& operator-=(const pixel& other) noexcept;
-		constexpr pixel& operator*=(const pixel& other) noexcept;
-		[[nodiscard]] constexpr bool operator==(const pixel& other) const noexcept;
-		[[nodiscard]] constexpr bool operator!=(const pixel& other) const noexcept;
+
+	public:
+
+		void bind() const noexcept override;
+		void unbind() const noexcept override;
+
+#pragma endregion
+#pragma region Implementations
+
+	private:
+
+		std::uint32_t create_shader(std::string_view src, std::uint32_t type, std::string_view label) const;
+		void check_compile(std::uint32_t shader, std::string_view label) const;
+		void create_program(std::uint32_t vertex_shader, std::uint32_t fragment_shader);
+		void check_link() const;
 
 #pragma endregion
 	};
 
-	using color = pixel;
-
-	std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept;
-
 }
-
-#include "pixel.inl"

@@ -72,6 +72,7 @@ namespace retro::math
 	using vector2f = vector2<std::float_t>;
 	using vector2d = vector2<std::double_t>;
 	using vector2i = vector2<std::int32_t>;
+	using vector2sz = vector2<std::size_t>;
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream& stream, const vector2<T>& vector) noexcept;

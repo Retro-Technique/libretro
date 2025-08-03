@@ -1,10 +1,12 @@
 {
   "dependencies": [
-    "boost-test",
+    "boost-algorithm",
     "boost-beast",
     "boost-iostreams",
     "boost-property-tree",
-    "boost-algorithm",
-    "stb"
+    "boost-test",
+    "glfw3",
+    "stb",
+    "glad"
   ]
 }

@@ -37,63 +37,57 @@
  *
  */
 
-#pragma once
+#include "pch.h"
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
-#endif
-
-namespace retro::image
+namespace retro::graphics
 {
 
-	struct pixel
-	{
 #pragma region Constructors
 
-		constexpr pixel() noexcept;
-		constexpr pixel(const pixel& other) noexcept;
-		constexpr explicit pixel(std::uint32_t value) noexcept;
-		constexpr explicit pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
-		~pixel() = default;
+	vertex_array::vertex_array() noexcept
+	{
+		glGenVertexArrays(1, &m_id);
+	}
 
-#pragma endregion
-#pragma region Attributes
-
-		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
-		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
-
-		std::uint8_t red;
-		std::uint8_t green;
-		std::uint8_t blue;
-		std::uint8_t alpha;
+	vertex_array::~vertex_array()
+	{
+		glDeleteVertexArrays(1, &m_id);
+	}
 
 #pragma endregion
 #pragma region Operations
 
-		[[nodiscard]] constexpr bool is_opaque() const noexcept;
-		[[nodiscard]] constexpr bool is_transparent() const noexcept;
-		[[nodiscard]] constexpr std::uint32_t to_integer() const noexcept;
-		constexpr void from_integer(std::uint32_t value) noexcept;
+	void vertex_array::set_position(std::uint32_t index) const noexcept
+	{
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, _position));
+	}
+
+	void vertex_array::set_color(std::uint32_t index) const noexcept
+	{
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, 4, GL_UNSIGNED_BYTE, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, _color));
+	}
+
+	void vertex_array::set_tex_coords(std::uint32_t index) const noexcept
+	{
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, _tex_coords));
+	}
 
 #pragma endregion
 #pragma region Overridables
-	
-		[[nodiscard]] constexpr pixel operator+(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator-(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator*(const pixel& other) noexcept;
-		constexpr pixel& operator+=(const pixel& other) noexcept;
-		constexpr pixel& operator-=(const pixel& other) noexcept;
-		constexpr pixel& operator*=(const pixel& other) noexcept;
-		[[nodiscard]] constexpr bool operator==(const pixel& other) const noexcept;
-		[[nodiscard]] constexpr bool operator!=(const pixel& other) const noexcept;
+
+	void vertex_array::bind() const noexcept
+	{
+		glBindVertexArray(m_id);
+	}
+
+	void vertex_array::unbind() const noexcept
+	{
+		glBindVertexArray(0);
+	}
 
 #pragma endregion
-	};
-
-	using color = pixel;
-
-	std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept;
 
 }
-
-#include "pixel.inl"

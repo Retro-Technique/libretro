@@ -78,7 +78,7 @@ namespace retro::image
 		}
 
 		clear();
-
+		
 		stbi_uc* data = stbi_load(path.string().c_str(), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), nullptr, STBI_rgb_alpha);
 		if (!data)
 		{
