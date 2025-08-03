@@ -8,6 +8,7 @@ set(SRC
 	"${INCROOT}/export.h"
 	"${INCROOT}/vertex.h"
 	"${INCROOT}/resource.h"
+	"${INCROOT}/texture.h"
 	"${INCROOT}/vertex_buffer.h"
 	"${INCROOT}/vertex_array.h"
 	"${INCROOT}/shader.h"
@@ -17,6 +18,7 @@ set(SRC
 	"${SRCROOT}/pch.cpp"
 	"${SRCROOT}/pch.h"
 	"${SRCROOT}/resource.cpp"
+	"${SRCROOT}/texture.cpp"
 	"${SRCROOT}/vertex_buffer.cpp"
 	"${SRCROOT}/vertex_array.cpp"
 	"${SRCROOT}/shader.cpp"
@@ -41,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}-graphics
 		glfw
 		glad::glad
 		${PROJECT_NAME}-math
+		${PROJECT_NAME}-image
 )
 
 target_compile_options(${PROJECT_NAME}-graphics

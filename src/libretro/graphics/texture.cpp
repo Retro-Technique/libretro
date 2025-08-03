@@ -37,27 +37,66 @@
  *
  */
 
-#pragma once
+#include "pch.h"
 
-#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
-#define __LIBRETRO_GRAPHICS_H_INCLUDED__
+namespace retro::graphics
+{
 
-#include "config.h"
+#pragma region Constructors
 
-#include <string>
+	texture::texture(const image::bitmap& bitmap, bool smooth, bool repeated) noexcept
+	{
+		glGenTextures(1, &m_id);
+		glBindTexture(GL_TEXTURE_2D, m_id);
 
-#include <libretro/math.h>
-#include <libretro/image.h>
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smooth ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, smooth ? GL_LINEAR : GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeated ? GL_REPEAT : GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP);
 
-#include "graphics/export.h"
-#include "graphics/vertex.h"
-#include "graphics/resource.h"
-#include "graphics/vertex_buffer.h"
-#include "graphics/vertex_array.h"
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "graphics/render_target.h"
-#include "graphics/window.h"
-#include "graphics/render_window.h"
+		glTexImage2D(GL_TEXTURE_2D, 
+					 0, 
+					 GL_RGBA8, 
+					 static_cast<GLsizei>(bitmap.width()), 
+					 static_cast<GLsizei>(bitmap.height()),
+					 0, 
+					 GL_RGBA, 
+					 GL_UNSIGNED_BYTE, 
+					 bitmap.data().data());
 
-#endif
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	texture::~texture()
+	{
+		if (m_id)
+		{
+			glDeleteTextures(1, &m_id);
+			m_id = 0;
+		}
+	}
+
+#pragma endregion
+#pragma region Operations
+
+	void texture::active(std::uint32_t slot) const noexcept
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
+	}
+
+#pragma endregion
+#pragma region Overridables
+
+	void texture::bind() const noexcept
+	{
+		glBindTexture(GL_TEXTURE_2D, m_id);
+	}
+
+	void texture::unbind() const noexcept
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+#pragma endregion
+
+}
