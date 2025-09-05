@@ -46,33 +46,27 @@
 namespace retro::graphics
 {
 
-	class LIBRETRO_GRAPHICS_API resource
+	template<typename T>
+	class resource
 	{
-#pragma region Constructors
+		template<typename T>
+		friend class resource_binder;
 
 	public:
 
-		resource() noexcept;
+		resource() noexcept = default;
 		~resource() = default;
 		resource(const resource&) = delete;
 		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
 
-#pragma endregion
-#pragma region Attributes
+	private:
 
-	protected:
+		void bind() const noexcept;
+		void unbind() const noexcept;
 
-		std::uint32_t m_id;
-
-#pragma endregion
-#pragma region Overridables
-
-	public:
-
-		virtual void bind() const noexcept;
-		virtual void unbind() const noexcept;
-
-#pragma endregion
+		T m_handler;
 	};
 
 }

@@ -37,20 +37,29 @@
  *
  */
 
-#include "pch.h"
+#pragma once
+
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
+#endif
 
 namespace retro::graphics
 {
 
-	void render_target::begin_scene() noexcept
+	enum class topology : std::uint32_t
 	{
-		glClearColor(0.f, 0.f, 0.f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
+		points,
+		lines,
+		line_strip,
+		line_loop,
+		triangles,
+		triangle_strip,
+		triangle_fan,
+		quads,
+		quad_strip,
+		polygon,
 
-	void render_target::end_scene() noexcept
-	{
-		
-	}
+		COUNT
+	};
 
 }

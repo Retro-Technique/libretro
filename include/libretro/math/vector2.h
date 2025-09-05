@@ -51,28 +51,44 @@ namespace retro::math
 	{
 		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");
 
-#pragma region Constructors
-
 		constexpr vector2() noexcept;
 		constexpr vector2(T x, T y) noexcept;
 		template<typename U>
 		constexpr explicit vector2(const vector2<U>& vector) noexcept;
 		~vector2() = default;
 
-#pragma endregion
-#pragma region Attributes
-
-		T x;
-		T y;
-
-#pragma endregion
-
+		union
+		{
+			struct
+			{
+				T x, y;
+			};
+			struct
+			{
+				T u, v;
+			};
+			struct
+			{
+				T w, h;
+			};
+		};
 	};
 
 	using vector2f = vector2<std::float_t>;
 	using vector2d = vector2<std::double_t>;
 	using vector2i = vector2<std::int32_t>;
-	using vector2sz = vector2<std::size_t>;
+	using vector2u = vector2<std::uint32_t>;
+	using vector2s = vector2<std::size_t>;
+	using point2f = vector2f;
+	using point2d = vector2d;
+	using point2i = vector2i;
+	using point2u = vector2u;
+	using point2s = vector2s;
+	using size2f = vector2f;
+	using size2d = vector2d;
+	using size2i = vector2i;
+	using size2u = vector2u;
+	using size2s = vector2s;
 
 	template<typename T>
 	std::ostream& operator<<(std::ostream& stream, const vector2<T>& vector) noexcept;

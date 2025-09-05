@@ -1,12 +1,10 @@
-find_package(Stb REQUIRED)
+find_package(Boost REQUIRED COMPONENTS gil)
 
 set(INCROOT "${PROJECT_SOURCE_DIR}/include/libretro/image")
 set(SRCROOT "${PROJECT_SOURCE_DIR}/src/libretro/image")
 
 set(SRC
 	"${INCROOT}/export.h"
-	"${INCROOT}/bitmap_runtime_error.h"
-	"${INCROOT}/bitmap_runtime_error.inl"
 	"${INCROOT}/pixel.h"
 	"${INCROOT}/pixel.inl"
 	"${INCROOT}/color.h"
@@ -26,6 +24,11 @@ target_include_directories(${PROJECT_NAME}-image
 		${PROJECT_SOURCE_DIR}/include
 	PRIVATE 
 		${Stb_INCLUDE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}-image 
+	PRIVATE 
+		Boost::gil
 )
 
 target_compile_options(${PROJECT_NAME}-image

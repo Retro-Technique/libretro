@@ -41,8 +41,16 @@
 
 #include <libretro/graphics.h>
 
+#include <utility>
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/glad.h>
+
+#include "error.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>

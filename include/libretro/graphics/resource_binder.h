@@ -37,70 +37,39 @@
  *
  */
 
-#include "pch.h"
+#pragma once
+
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
+#endif
 
 namespace retro::graphics
 {
 
-	window::window() noexcept
-		: m_window(nullptr)
+	template<typename T>
+	class resource_binder
 	{
-	}
+	public:
 
-	window::~window()
-	{
-		if (m_window)
+		explicit resource_binder(const resource<T>& resource) noexcept
+			: m_resource(resource)
 		{
-			glfwDestroyWindow(static_cast<GLFWwindow*>(m_window));
-			m_window = nullptr;
+			m_resource.bind();
 		}
 
-		glfwTerminate();
-	}
-
-	bool window::create(const info& info) noexcept
-	{
-		if (info._width == 0 || info._height == 0)
+		~resource_binder()
 		{
-			return false;
+			m_resource.unbind();
 		}
 
-		glfwSetErrorCallback(nullptr);
+		resource_binder(const resource_binder&) = delete;
+		resource_binder& operator=(const resource_binder&) = delete;
+		resource_binder(resource_binder&&) noexcept = default;
+		resource_binder& operator=(resource_binder&&) noexcept = default;
 
-		if (!glfwInit())
-		{
-			return false;
-		}
+	private:
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		m_window = glfwCreateWindow(static_cast<int>(info._width), 
-									static_cast<int>(info._height), 
-									info._title.c_str(), 
-									info._fullscreen ? glfwGetPrimaryMonitor() : nullptr,
-									nullptr);
-		if (!m_window)
-		{
-			return false;
-		}
-
-		glfwSetKeyCallback(static_cast<GLFWwindow*>(m_window), nullptr);
-
-		glfwMakeContextCurrent(static_cast<GLFWwindow*>(m_window));		
-
-		return true;
-	}
-
-	void window::poll_events() noexcept
-	{
-		glfwPollEvents();
-	}
-
-	bool window::should_close() noexcept
-	{
-		return m_window ? glfwWindowShouldClose(static_cast<GLFWwindow*>(m_window)) == GLFW_TRUE : true;
-	}
+		const resource<T>& m_resource;
+	};
 
 }

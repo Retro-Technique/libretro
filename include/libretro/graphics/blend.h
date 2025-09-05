@@ -39,27 +39,21 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
 
-namespace retro::image
+namespace retro::graphics
 {
 
-	class bitmap_runtime_error : public std::runtime_error
+	enum class blend : std::uint32_t
 	{
-#pragma region Constructors
+		alpha,
+		add,
+		multiply,
+		none,
 
-	public:
-
-		explicit bitmap_runtime_error(const std::string& msg);
-		explicit bitmap_runtime_error(const char* msg);
-		explicit bitmap_runtime_error(std::string_view msg);
-		~bitmap_runtime_error() override = default;
-
-#pragma endregion
+		COUNT
 	};
 
 }
-
-#include "bitmap_runtime_error.inl"

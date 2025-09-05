@@ -79,17 +79,31 @@ namespace retro::image
 
 		clear();
 		
-		stbi_uc* data = stbi_load(path.string().c_str(), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), nullptr, STBI_rgb_alpha);
-		if (!data)
-		{
-			throw bitmap_runtime_error("Failed to load image: " + path.string() + " - " + stbi_failure_reason());
-		}
+		//boost::gil::rgba8_image_t img;
+		//boost::gil::rgba8_pixel_t pixel;
+		
+		//boost::gil::read_image(path.string(), img, boost::gil::png_tag{});
+		
+		//m_width = img.width();
+	//	m_height = img.height();
 
-		m_width = static_cast<std::size_t>(m_width);
-		m_height = static_cast<std::size_t>(m_height);
-		m_pixels.assign(data, data + (m_width * m_height * 4));
+	//	auto view = boost::gil::const_view(img);
 
-		stbi_image_free(data);
+		//m_pixels.resize(m_width * m_height * 4);
+
+		//for (std::size_t y = 0; y < m_height; ++y)
+		//{
+		//	auto row = view.row_begin(y);
+		//	for (std::size_t x = 0; x < m_width; ++x)
+		//	{
+		//		const auto& px = row[x];
+		//		std::size_t idx = (y * m_width + x) * 4;
+		//		m_pixels[idx + 0] = px[0]; // R
+		//		m_pixels[idx + 1] = px[1]; // G
+		//		m_pixels[idx + 2] = px[2]; // B
+		//		m_pixels[idx + 3] = px[3]; // A
+		//	}
+		//}
 	}
 
 	void bitmap::load_from_memory(const std::uint8_t* buffer, std::size_t size_bytes)
@@ -98,26 +112,30 @@ namespace retro::image
 		{
 			throw std::invalid_argument("Buffer is null or size is zero.");
 		}
-
+	
 		clear();
 
-		int channel_count = 0;
+		//int channel_count = 0;
 
-		stbi_uc* data = stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha);
-		if (!data)
-		{
-			throw bitmap_runtime_error("Failed to load image from memory: " + std::string(stbi_failure_reason()));
-		}
+		/*std::unique_ptr<stbi_uc, void (*)(void*)> bmp(
+			stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha),
+			stbi_image_free);*/
 
-		if (channel_count != 4)
-		{
-			stbi_image_free(data);
-			throw bitmap_runtime_error("Image must have 4 channels (RGBA).");
-		}
+		//stbi_uc* data = stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha);
+		//if (!data)
+		//{
+		//	throw std::runtime_error("Failed to load image from memory: " + std::string(stbi_failure_reason()));
+		//}
 
-		m_pixels.assign(data, data + (m_width * m_height * 4));
+		//if (channel_count != 4)
+		//{
+		//	stbi_image_free(data);
+		//	throw std::runtime_error("Image must have 4 channels (RGBA).");
+		//}
 
-		stbi_image_free(data);
+		//m_pixels.assign(data, data + (m_width * m_height * 4));
+
+		//stbi_image_free(data);
 	}
 
 	void bitmap::save_to_file(const std::filesystem::path& path) const
@@ -138,9 +156,9 @@ namespace retro::image
 		}
 
 		const std::string ext = path.extension().string();
-		int ret = 1;
+		//int ret = 1;
 
-		if (ext == ".png")
+		/*if (ext == ".png")
 		{
 			ret = stbi_write_png(path.string().c_str(), static_cast<int>(m_width), static_cast<int>(m_height), 4, m_pixels.data(), static_cast<int>(m_width) * 4);
 		}
@@ -151,12 +169,12 @@ namespace retro::image
 		else if (ext == ".bmp")
 		{
 			ret = stbi_write_bmp(path.string().c_str(), static_cast<int>(m_width), static_cast<int>(m_height), 4, m_pixels.data());
-		}
+		}*/
 
-		if (ret == 0)
-		{
-			throw bitmap_runtime_error("Failed to save image: " + path.string() + " - " + stbi_failure_reason());
-		}
+		//if (ret == 0)
+		//{
+		//	throw std::runtime_error("Failed to save image: " + path.string() + " - " + stbi_failure_reason());
+		//}
 	}
 
 	void bitmap::clear() noexcept

@@ -51,7 +51,6 @@
 #include <span>
 
 #include "image/export.h"
-#include "image/bitmap_runtime_error.h"
 #include "image/pixel.h"
 #include "image/bitmap.h"
 #include "image/color.h"

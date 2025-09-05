@@ -46,35 +46,86 @@
 namespace retro::graphics
 {
 
-	class LIBRETRO_GRAPHICS_API vertex_array : public resource
+	struct vertex_array_t
 	{
-#pragma region Constructors
-
-	public:
-
-		vertex_array() noexcept;
-		~vertex_array();
-		vertex_array(const vertex_array&) = delete;
-		vertex_array& operator=(const vertex_array&) = delete;
-
-#pragma endregion
-#pragma region Operations
-
-	public:
-
-		void set_position(std::uint32_t index) const noexcept;
-		void set_color(std::uint32_t index) const noexcept;
-		void set_tex_coords(std::uint32_t index) const noexcept;
-
-#pragma endregion
-#pragma region Overridables
-
-	public:
-
-		void bind() const noexcept override;
-		void unbind() const noexcept override;
-
-#pragma endregion
+		std::uint32_t id;
+		std::uint32_t topology;
 	};
+
+	template<>
+	class resource<vertex_array_t>
+	{
+		template<typename T>
+		friend class resource_binder;
+
+	public:
+
+		resource() = delete;
+
+		explicit resource(topology topology) noexcept
+			: m_handler{ 0 }
+		{
+			m_handler.id = gl::gen_vertex_array();
+			m_handler.topology = gl::native_from(topology);
+		}
+
+		~resource()
+		{
+			gl::delete_vertex_array(m_handler.id);
+		}
+
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
+
+		void enable_attribute_position(std::uint32_t location) const noexcept
+		{
+			resource_binder binder(*this);
+
+			gl::enable_vertex_attrib_array(location);
+			gl::vertex_attrib_pointer_position(location);
+		}
+
+		void enable_attribute_color(std::uint32_t location) const noexcept
+		{
+			resource_binder binder(*this);
+
+			gl::enable_vertex_attrib_array(location);
+			gl::vertex_attrib_pointer_color(location);
+		}
+
+		void enable_attribute_tex_coord(std::uint32_t location) const noexcept
+		{
+			resource_binder binder(*this);
+
+			gl::enable_vertex_attrib_array(location);
+			gl::vertex_attrib_pointer_tex_coord(location);
+		}
+
+	private:
+
+		void bind() const noexcept
+		{
+			gl::bind_vertex_array(m_handler.id);
+		}
+
+		void unbind() const noexcept
+		{
+			gl::bind_vertex_array(0);
+		}
+
+		vertex_array_t m_handler;
+
+	};
+
+	using vertex_array = resource<vertex_array_t>;
+
+	inline vertex_array make_vertex_array(topology topology)
+	{
+		vertex_array vao(topology);
+
+		return vao;
+	}
 
 }

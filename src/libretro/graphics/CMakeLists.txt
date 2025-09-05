@@ -1,31 +1,14 @@
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 set(INCROOT "${PROJECT_SOURCE_DIR}/include/libretro/graphics")
 set(SRCROOT "${PROJECT_SOURCE_DIR}/src/libretro/graphics")
 
 set(SRC
-	"${INCROOT}/export.h"
-	"${INCROOT}/vertex.h"
-	"${INCROOT}/resource.h"
-	"${INCROOT}/texture.h"
-	"${INCROOT}/vertex_buffer.h"
-	"${INCROOT}/vertex_array.h"
-	"${INCROOT}/shader.h"
-	"${INCROOT}/render_window.h"
-	"${INCROOT}/render_target.h"
-	"${INCROOT}/window.h"
 	"${SRCROOT}/pch.cpp"
 	"${SRCROOT}/pch.h"
-	"${SRCROOT}/resource.cpp"
-	"${SRCROOT}/texture.cpp"
-	"${SRCROOT}/vertex_buffer.cpp"
-	"${SRCROOT}/vertex_array.cpp"
-	"${SRCROOT}/shader.cpp"
-	"${SRCROOT}/window.cpp"
-	"${SRCROOT}/render_window.cpp"
-	"${SRCROOT}/render_target.cpp"
-
+	"${SRCROOT}/gl.cpp"
 )
 
 add_library(${PROJECT_NAME}-graphics 
@@ -42,6 +25,7 @@ target_link_libraries(${PROJECT_NAME}-graphics
 	PRIVATE 
 		glfw
 		glad::glad
+		glm::glm-header-only
 		${PROJECT_NAME}-math
 		${PROJECT_NAME}-image
 )
