@@ -64,10 +64,6 @@ namespace retro::graphics
 		explicit resource(std::span<const std::byte> data, const math::size2s& size, bool repeated, bool smoothed) noexcept
 			: m_handler{ 0 }
 		{
-			//Expects(!data.empty());
-			//Expects(size.w > 0 && size.h > 0);
-			//Expects(data.size() >= size.w * size.h * sizeof(vertex::color));
-
 			m_handler.id = gl::gen_texture();
 
 			resource_binder binder(*this);

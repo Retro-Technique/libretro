@@ -43,6 +43,8 @@
 #error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
 
+struct GLFWwindow;
+
 namespace retro::graphics
 {
 
@@ -54,7 +56,8 @@ namespace retro::graphics
 	private:
 
 		static constexpr const std::uint32_t INVALID_ID = 0u;
-		
+				
+		using window_ptr = std::unique_ptr<GLFWwindow, void(*)(GLFWwindow*)>;
 		using factors = std::pair<std::uint32_t, std::uint32_t>;
 
 		gl() = delete;
@@ -96,6 +99,9 @@ namespace retro::graphics
 		static std::uint32_t native_from(topology topology) noexcept;
 		static factors native_from(blend blend) noexcept;
 		static std::uint32_t native_from(shader type) noexcept;
+
+		static window_ptr create_window(std::string_view title, math::size2s window_size, bool fullscreen) noexcept;
+
 	};
 
 }

@@ -1,6 +1,7 @@
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(Microsoft.GSL CONFIG REQUIRED)
 
 set(INCROOT "${PROJECT_SOURCE_DIR}/include/libretro/graphics")
 set(SRCROOT "${PROJECT_SOURCE_DIR}/src/libretro/graphics")
@@ -26,6 +27,7 @@ target_link_libraries(${PROJECT_NAME}-graphics
 		glfw
 		glad::glad
 		glm::glm-header-only
+		Microsoft.GSL::GSL
 		${PROJECT_NAME}-math
 		${PROJECT_NAME}-image
 )

@@ -75,19 +75,19 @@ namespace retro::graphics
 
 	void gl::bind_buffer(std::uint32_t id) noexcept
 	{
-		//Expects(id >= 0);
+		Expects(id >= 0);
 		glBindBuffer(GL_ARRAY_BUFFER, id);
 	}
 
 	void gl::bind_vertex_array(std::uint32_t id) noexcept
 	{
-		//Expects(id >= 0);
+		Expects(id >= 0);
 		glBindVertexArray(id);
 	}
 
 	void gl::bind_texture(std::uint32_t id) noexcept
 	{
-		//Expects(id >= 0);
+		Expects(id >= 0);
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
@@ -98,12 +98,13 @@ namespace retro::graphics
 
 	void gl::use_program(std::uint32_t id) noexcept
 	{
+		Expects(id >= 0);
 		glUseProgram(id);
 	}
 
 	void gl::buffer_data(std::span<const vertex> vertices) noexcept
 	{
-		//Expects(!vertices.empty());
+		Expects(!vertices.empty());
 		glBufferData(GL_ARRAY_BUFFER, vertices.size_bytes(), vertices.data(), GL_STATIC_DRAW);
 	}
 
@@ -129,6 +130,10 @@ namespace retro::graphics
 
 	void gl::tex_image_2D_from_memory(std::span<const std::byte> data, const math::size2i& size) noexcept
 	{
+		Expects(!data.empty());
+		Expects(size.w > 0 && size.h > 0);
+		Expects(data.size() >= size.w * size.h * sizeof(vertex::color));
+
 		glTexImage2D(GL_TEXTURE_2D,
 					 0,
 					 GL_RGBA8,
@@ -183,25 +188,25 @@ namespace retro::graphics
 
 	void gl::delete_buffer(std::uint32_t id) noexcept
 	{
-		//Expects(id != 0);
+		Expects(id != 0);
 		glDeleteBuffers(1, &id);
 	}
 
 	void gl::delete_vertex_array(std::uint32_t id) noexcept
 	{
-		//Expects(id != 0);
+		Expects(id != 0);
 		glDeleteVertexArrays(1, &id);
 	}
 
 	void gl::delete_texture(std::uint32_t id) noexcept
 	{
-		//Expects(id != 0);
+		Expects(id != 0);
 		glDeleteTextures(1, &id);
 	}
 
 	void gl::delete_shader(std::uint32_t id) noexcept
 	{
-		//Expects(id != 0);
+		Expects(id != 0);
 		glDeleteShader(id);
 	}
 
@@ -256,4 +261,15 @@ namespace retro::graphics
 		return SHADERS[index];
 	}
 
+	gl::window_ptr gl::create_window(std::string_view title, math::size2s window_size, bool fullscreen) noexcept
+	{
+		GLFWwindow* ptr = glfwCreateWindow(window_size.w, 
+								window_size.h, 
+								title.data(),
+								fullscreen ? glfwGetPrimaryMonitor() : nullptr,
+								nullptr);
+
+		return window_ptr(ptr, glfwDestroyWindow);
+	}
+	
 }

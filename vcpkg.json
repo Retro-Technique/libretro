@@ -9,6 +9,7 @@
     "boost-test",
     "glad",
     "glfw3",
-    "glm"
+    "glm",
+    "ms-gsl"
   ]
 }
