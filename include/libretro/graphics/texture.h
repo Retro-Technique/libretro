@@ -46,33 +46,70 @@
 namespace retro::graphics
 {
 
-	class LIBRETRO_GRAPHICS_API texture : public resource
+	struct texture_t
 	{
-#pragma region Constructors
-
-	public:
-
-		texture(const image::bitmap& bitmap, bool smooth = true, bool repeated = false) noexcept;
-		~texture();
-		texture(const texture&) = delete;
-		texture& operator=(const texture&) = delete;
-
-#pragma endregion
-#pragma region Operations
-
-	public:
-
-		void active(std::uint32_t slot = 0) const noexcept;
-
-#pragma endregion
-#pragma region Overridables
-
-	public:
-
-		void bind() const noexcept override;
-		void unbind() const noexcept override;
-
-#pragma endregion
+		std::uint32_t id;
 	};
+
+	template<>
+	class resource<texture_t>
+	{
+		template<typename T>
+		friend class resource_binder;
+
+	public:
+
+		resource() = delete;
+
+		explicit resource(std::span<const std::byte> data, const math::size2s& size, bool repeated, bool smoothed) noexcept
+			: m_handler{ 0 }
+		{
+			//Expects(!data.empty());
+			//Expects(size.w > 0 && size.h > 0);
+			//Expects(data.size() >= size.w * size.h * sizeof(vertex::color));
+
+			m_handler.id = gl::gen_texture();
+
+			resource_binder binder(*this);
+			gl::tex_parameter_min_filter(smoothed);
+			gl::tex_parameter_mag_filter(smoothed);
+			gl::tex_parameter_wrap_s(repeated);
+			gl::tex_parameter_wrap_t(repeated);
+			gl::tex_image_2D_from_memory(data, math::size2i(size.w, size.h));
+		}
+
+		~resource()
+		{
+			gl::delete_texture(m_handler.id);
+		}
+
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
+
+	private:
+
+		void bind() const noexcept
+		{
+			gl::bind_texture(m_handler.id);
+		}
+
+		void unbind() const noexcept
+		{
+			gl::bind_texture(0);
+		}
+
+		texture_t m_handler;
+	};
+
+	using texture = resource<texture_t>;
+
+	inline texture make_vertex_buffer(std::span<const std::byte> data, const math::size2s& size, bool repeated = false, bool smoothed = false)
+	{
+		texture tex(data, size, repeated, smoothed);
+
+		return tex;
+	}
 
 }

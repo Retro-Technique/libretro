@@ -5,8 +5,7 @@ int main(int argc, char* argv[])
 	retro::graphics::window::info window_info
 	{
 		._title{"Simple Window"},
-		._width{640},
-		._height{480},
+		._size{640, 480},
 		._fullscreen{false}
 	};
 
@@ -17,11 +16,7 @@ int main(int argc, char* argv[])
 	{
 		return EXIT_FAILURE;
 	}
-
-	retro::graphics::vertex vertex;
-
-	std::cout << vertex << std::endl;
-
+	
 	while (!render_window.should_close())
 	{
 		render_window.poll_events();

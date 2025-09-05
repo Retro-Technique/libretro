@@ -48,22 +48,15 @@ namespace retro::graphics
 
 	struct vertex
 	{
-#pragma region Constructors
+		vertex() noexcept;
+		explicit vertex(const math::vector2f& position) noexcept;
+		vertex(const math::vector2f& position, const image::color& color) noexcept;
+		vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept;
+		vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept;
 
-		constexpr vertex() noexcept;
-		constexpr explicit vertex(const math::vector2f& position) noexcept;
-		constexpr vertex(const math::vector2f& position, const image::color& color) noexcept;
-		constexpr vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept;
-		constexpr vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept;
-
-#pragma endregion
-#pragma region Attributes
-
-		math::vector2f	_position;
-		image::color	_color;
-		math::vector2f	_tex_coords;
-
-#pragma endregion
+		math::vector2f	position;
+		image::color	color;
+		math::vector2f	tex_coords;
 	};
 
 	std::ostream& operator<<(std::ostream& stream, const vertex& vertex) noexcept;

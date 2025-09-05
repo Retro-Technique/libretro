@@ -52,10 +52,9 @@ namespace retro::graphics
 
 		struct info
 		{
-			std::string _title;
-			std::size_t _width;
-			std::size_t _height;
-			bool		_fullscreen;
+			std::string		_title;
+			math::vector2s	_size;
+			bool			_fullscreen;
 		};
 
 #pragma region Constructors
@@ -79,8 +78,9 @@ namespace retro::graphics
 
 	public:
 
-		void poll_events() noexcept;
-		bool should_close() noexcept;
+		math::vector2s size() const noexcept;
+		void poll_events() const noexcept;
+		bool should_close() const noexcept;
 
 #pragma endregion
 #pragma region Overridables

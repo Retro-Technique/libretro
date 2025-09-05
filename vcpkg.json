@@ -2,11 +2,13 @@
   "dependencies": [
     "boost-algorithm",
     "boost-beast",
+    "boost-gil",
     "boost-iostreams",
+    "boost-log",
     "boost-property-tree",
     "boost-test",
+    "glad",
     "glfw3",
-    "stb",
-    "glad"
+    "glm"
   ]
 }

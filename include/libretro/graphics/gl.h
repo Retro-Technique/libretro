@@ -37,29 +37,52 @@
  *
  */
 
-#include "pch.h"
+#pragma once
+
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
+#endif
 
 namespace retro::graphics
 {
 
-#pragma region Constructors
-
-	resource::resource() noexcept
-		: m_id(0)
+	class LIBRETRO_GRAPHICS_API gl
 	{
-	}
+		template<typename T>
+		friend class resource;
 
-#pragma endregion
-#pragma region Overridables
+	private:
 
-	void resource::bind() const noexcept
-	{
-	}
+		using factors = std::pair<std::uint32_t, std::uint32_t>;
 
-	void resource::unbind() const noexcept
-	{
-	}
+		gl() = delete;
+		~gl() = delete;
 
-#pragma endregion
+		static std::uint32_t gen_buffer() noexcept;
+		static std::uint32_t gen_vertex_array() noexcept;
+		static std::uint32_t gen_texture() noexcept;
+
+		static void bind_buffer(std::uint32_t id) noexcept;
+		static void bind_vertex_array(std::uint32_t id) noexcept;
+		static void bind_texture(std::uint32_t id) noexcept;
+
+		static void buffer_data(std::span<const vertex> vertices) noexcept;
+		static void enable_vertex_attrib_array(std::uint32_t location) noexcept;
+		static void vertex_attrib_pointer_position(std::uint32_t location) noexcept;
+		static void vertex_attrib_pointer_color(std::uint32_t location) noexcept;
+		static void vertex_attrib_pointer_tex_coord(std::uint32_t location) noexcept;
+		static void tex_image_2D_from_memory(std::span<const std::byte> data, const math::size2i& size) noexcept;
+		static void tex_parameter_min_filter(bool smoothed) noexcept;
+		static void tex_parameter_mag_filter(bool smoothed) noexcept;
+		static void tex_parameter_wrap_s(bool repeated) noexcept;
+		static void tex_parameter_wrap_t(bool repeated) noexcept;
+
+		static void delete_buffer(std::uint32_t id) noexcept;
+		static void delete_vertex_array(std::uint32_t id) noexcept;
+		static void delete_texture(std::uint32_t id) noexcept;
+
+		static std::uint32_t native_from(topology topology) noexcept;
+		static factors native_from(blend blend) noexcept;
+	};
 
 }

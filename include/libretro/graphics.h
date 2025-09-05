@@ -45,19 +45,21 @@
 #include "config.h"
 
 #include <string>
+#include <cstdint>
 
 #include <libretro/math.h>
 #include <libretro/image.h>
 
 #include "graphics/export.h"
 #include "graphics/vertex.h"
+#include "graphics/topology.h"
+#include "graphics/blend.h"
+#include "graphics/gl.h"
 #include "graphics/resource.h"
+#include "graphics/resource_binder.h"
 #include "graphics/vertex_buffer.h"
 #include "graphics/vertex_array.h"
-#include "graphics/shader.h"
 #include "graphics/texture.h"
-#include "graphics/render_target.h"
 #include "graphics/window.h"
-#include "graphics/render_window.h"
 
 #endif

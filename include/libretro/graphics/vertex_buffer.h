@@ -46,26 +46,62 @@
 namespace retro::graphics
 {
 
-	class LIBRETRO_GRAPHICS_API vertex_buffer : public resource
+	struct vertex_buffer_t
 	{
-#pragma region Constructors
-
-	public:
-
-		vertex_buffer(std::span<vertex> vertices) noexcept;
-		~vertex_buffer();
-		vertex_buffer(const vertex_buffer&) = delete;
-		vertex_buffer& operator=(const vertex_buffer&) = delete;
-
-#pragma endregion
-#pragma region Overridables
-
-	public:
-
-		void bind() const noexcept override;
-		void unbind() const noexcept override;
-
-#pragma endregion
+		std::uint32_t id;
 	};
+
+	template<>
+	class resource<vertex_buffer_t>
+	{
+		template<typename T>
+		friend class resource_binder;
+
+	public:
+
+		resource() = delete;
+
+		explicit resource(std::span<const vertex> vertices) noexcept
+			: m_handler{ 0 }
+		{
+			m_handler.id = gl::gen_buffer();
+
+			resource_binder binder(*this);
+			gl::buffer_data(vertices);
+		}
+
+		~resource()
+		{
+			gl::delete_buffer(m_handler.id);
+		}
+
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
+
+	private:
+
+		void bind() const noexcept
+		{
+			gl::bind_buffer(m_handler.id);
+		}
+
+		void unbind() const noexcept
+		{
+			gl::bind_buffer(0);
+		}
+
+		vertex_buffer_t m_handler;
+	};
+
+	using vertex_buffer = resource<vertex_buffer_t>;
+
+	inline vertex_buffer make_vertex_buffer(std::span<const vertex> vertices)
+	{
+		vertex_buffer vbo(vertices);
+
+		return vbo;
+	}
 
 }

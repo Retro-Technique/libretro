@@ -40,56 +40,49 @@
 namespace retro::graphics
 {
 
-#pragma region Constructors
-
-	constexpr vertex::vertex() noexcept
-		: _position(0.f, 0.f)
-		, _color(255, 255, 255)
-		, _tex_coords(0.f, 0.f)
+	inline vertex::vertex() noexcept
+		: position(0.f, 0.f)
+		, color{255, 255, 255, 255}
+		, tex_coords(0.f, 0.f)
 	{
 
 	}
 
-	constexpr vertex::vertex(const math::vector2f& position) noexcept
-		: _position(position)
-		, _color(255, 255, 255)
-		, _tex_coords(0.f, 0.f)
+	inline vertex::vertex(const math::vector2f& position) noexcept
+		: position(position)
+		, color{ 255, 255, 255, 255 }
+		, tex_coords(0.f, 0.f)
 	{
 
 	}
 
-	constexpr vertex::vertex(const math::vector2f& position, const image::color& color) noexcept
-		: _position(position)
-		, _color(color)
-		, _tex_coords(0.f, 0.f)
+	inline vertex::vertex(const math::vector2f& position, const image::color& color) noexcept
+		: position(position)
+		, color(color)
+		, tex_coords(0.f, 0.f)
 	{
-
 	}
 
-	constexpr vertex::vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept
-		: _position(position)
-		, _color(255, 255, 255)
-		, _tex_coords(tex_coords)
+	inline vertex::vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept
+		: position(position)
+		, color{ 255, 255, 255, 255 }
+		, tex_coords(tex_coords)
 	{
-
 	}
 
-	constexpr vertex::vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept
-		: _position(position)
-		, _color(color)
-		, _tex_coords(tex_coords)
-	{
-
+	inline vertex::vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept
+		: position(position)
+		, color(color)
+		, tex_coords(tex_coords)
+	{		
 	}
-
-#pragma endregion
 
 	inline std::ostream& operator<<(std::ostream& stream, const vertex& vertex) noexcept
 	{
 		return stream << "vertex("
-			<< "position(" << vertex._position << ")" << ", "
-			<< "color(" << vertex._color << ")" << ", "
-			<< "texcoord(" << vertex._tex_coords << ")" << ")";
+			<< "position(" << vertex.position << ")" << ", "
+			<< "color(" << vertex.color << ")" << ","
+			<< "texcoord(" << vertex.tex_coords << ")" << ")";
 	}
 
 }
