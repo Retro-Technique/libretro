@@ -54,12 +54,16 @@
 #include "graphics/vertex.h"
 #include "graphics/topology.h"
 #include "graphics/blend.h"
+#include "graphics/shader.h"
 #include "graphics/gl.h"
+#include "graphics/shader_source.h"
 #include "graphics/resource.h"
 #include "graphics/resource_binder.h"
 #include "graphics/vertex_buffer.h"
 #include "graphics/vertex_array.h"
 #include "graphics/texture.h"
+#include "graphics/blend_mode.h"
+#include "graphics/shader_program.h"
 #include "graphics/window.h"
 
 #endif

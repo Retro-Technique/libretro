@@ -46,86 +46,60 @@
 namespace retro::graphics
 {
 
-	struct vertex_array_t
+	template<shader T>
+	class shader_source
 	{
-		std::uint32_t id;
-		std::uint32_t topology;
-	};
-
-	template<>
-	class resource<vertex_array_t>
-	{
-		template<typename T>
-		friend class resource_binder;
+		friend class fragment_shader_program;
+		friend class vertex_shader_program;
 
 	public:
 
-		resource() = delete;
+		shader_source() = delete;
 
-		explicit resource(topology topology) noexcept
-			: m_handler{ 0 }
+		shader_source(std::string_view src) noexcept
+			: m_id(0)
 		{
-			m_handler.id = gl::gen_vertex_array();
-			m_handler.topology = gl::native_from(topology);
+			m_id = gl::create_shader(T);
+			gl::shader_source(m_id, src);
+			gl::compile_shader(m_id);
 		}
 
-		~resource()
+		~shader_source()
 		{
-			gl::delete_vertex_array(m_handler.id);
+			gl::delete_shader(m_id);
 		}
 
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
+		shader_source(const shader_source&) = delete;
+		shader_source& operator=(const shader_source&) = delete;
+		shader_source(shader_source&&) noexcept = default;
+		shader_source& operator=(shader_source&&) noexcept = default;
 
-		void enable_attribute_position(std::uint32_t location) const noexcept
+		std::uint32_t operator()() const noexcept
 		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_position(location);
-		}
-
-		void enable_attribute_color(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_color(location);
-		}
-
-		void enable_attribute_tex_coord(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_tex_coord(location);
+			return m_id;
 		}
 
 	private:
 
-		void bind() const noexcept
-		{
-			gl::bind_vertex_array(m_handler.id);
-		}
-
-		void unbind() const noexcept
-		{
-			gl::bind_vertex_array(gl::INVALID_ID);
-		}
-
-		vertex_array_t m_handler;
+		std::uint32_t m_id;
 
 	};
 
-	using vertex_array = resource<vertex_array_t>;
+	using fragment_shader_source = shader_source<shader::fragment>;
+	using vertex_shader_source = shader_source<shader::vertex>;
 
-	inline vertex_array make_vertex_array(topology topology)
+	inline fragment_shader_source make_fragment_shader_source(std::string_view src)
 	{
-		vertex_array vao(topology);
+		fragment_shader_source fs(src);
 
-		return vao;
+		return fs;
+	}
+
+	inline vertex_shader_source make_vertex_shader_source(std::string_view src)
+	{
+		vertex_shader_source vs(src);
+
+		return vs;
 	}
 
 }

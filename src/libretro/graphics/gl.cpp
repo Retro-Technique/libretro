@@ -63,6 +63,16 @@ namespace retro::graphics
 		return id;
 	}
 
+	std::uint32_t gl::create_shader(shader type) noexcept
+	{
+		return glCreateShader(native_from(type));
+	}
+
+	std::uint32_t gl::create_program() noexcept
+	{
+		return glCreateProgram();
+	}
+
 	void gl::bind_buffer(std::uint32_t id) noexcept
 	{
 		//Expects(id >= 0);
@@ -79,6 +89,16 @@ namespace retro::graphics
 	{
 		//Expects(id >= 0);
 		glBindTexture(GL_TEXTURE_2D, id);
+	}
+
+	void gl::blend_func(std::uint32_t srcfactor, std::uint32_t dstfactor) noexcept
+	{
+		glBlendFunc(srcfactor, dstfactor);
+	}
+
+	void gl::use_program(std::uint32_t id) noexcept
+	{
+		glUseProgram(id);
 	}
 
 	void gl::buffer_data(std::span<const vertex> vertices) noexcept
@@ -140,6 +160,27 @@ namespace retro::graphics
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP);
 	}
 
+	void gl::shader_source(std::uint32_t id, std::string_view src) noexcept
+	{
+		const char* data = src.data();
+		glShaderSource(id, 1, &data, nullptr);
+	}
+
+	void gl::compile_shader(std::uint32_t id) noexcept
+	{
+		glCompileShader(id);
+	}
+
+	void gl::attach_shader(std::uint32_t id, std::uint32_t shader_id) noexcept
+	{
+		glAttachShader(id, shader_id);
+	}
+
+	void gl::link_program(std::uint32_t id) noexcept
+	{
+		glLinkProgram(id);
+	}
+
 	void gl::delete_buffer(std::uint32_t id) noexcept
 	{
 		//Expects(id != 0);
@@ -156,6 +197,17 @@ namespace retro::graphics
 	{
 		//Expects(id != 0);
 		glDeleteTextures(1, &id);
+	}
+
+	void gl::delete_shader(std::uint32_t id) noexcept
+	{
+		//Expects(id != 0);
+		glDeleteShader(id);
+	}
+
+	void gl::delete_program(std::uint32_t id) noexcept
+	{
+		glDeleteProgram(id);
 	}
 
 	std::uint32_t gl::native_from(topology topology) noexcept
@@ -190,6 +242,18 @@ namespace retro::graphics
 
 		const auto index = std::to_underlying(blend);
 		return BLEND_MODES[index];
+	}
+
+	std::uint32_t gl::native_from(shader type) noexcept
+	{
+		static constexpr std::array<std::uint32_t, static_cast<std::size_t>(shader::COUNT)> SHADERS =
+		{
+			GL_FRAGMENT_SHADER,
+			GL_VERTEX_SHADER
+		};
+		
+		const auto index = std::to_underlying(type);
+		return SHADERS[index];
 	}
 
 }

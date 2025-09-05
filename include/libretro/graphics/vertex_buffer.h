@@ -89,7 +89,7 @@ namespace retro::graphics
 
 		void unbind() const noexcept
 		{
-			gl::bind_buffer(0);
+			gl::bind_buffer(gl::INVALID_ID);
 		}
 
 		vertex_buffer_t m_handler;

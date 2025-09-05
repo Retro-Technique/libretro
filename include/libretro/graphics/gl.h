@@ -53,6 +53,8 @@ namespace retro::graphics
 
 	private:
 
+		static constexpr const std::uint32_t INVALID_ID = 0u;
+		
 		using factors = std::pair<std::uint32_t, std::uint32_t>;
 
 		gl() = delete;
@@ -61,10 +63,14 @@ namespace retro::graphics
 		static std::uint32_t gen_buffer() noexcept;
 		static std::uint32_t gen_vertex_array() noexcept;
 		static std::uint32_t gen_texture() noexcept;
+		static std::uint32_t create_shader(shader type) noexcept;
+		static std::uint32_t create_program() noexcept;
 
 		static void bind_buffer(std::uint32_t id) noexcept;
 		static void bind_vertex_array(std::uint32_t id) noexcept;
 		static void bind_texture(std::uint32_t id) noexcept;
+		static void blend_func(std::uint32_t srcfactor, std::uint32_t dstfactor) noexcept;
+		static void use_program(std::uint32_t id) noexcept;
 
 		static void buffer_data(std::span<const vertex> vertices) noexcept;
 		static void enable_vertex_attrib_array(std::uint32_t location) noexcept;
@@ -76,13 +82,20 @@ namespace retro::graphics
 		static void tex_parameter_mag_filter(bool smoothed) noexcept;
 		static void tex_parameter_wrap_s(bool repeated) noexcept;
 		static void tex_parameter_wrap_t(bool repeated) noexcept;
-
+		static void shader_source(std::uint32_t id, std::string_view src) noexcept;
+		static void compile_shader(std::uint32_t id) noexcept;
+		static void attach_shader(std::uint32_t id, std::uint32_t shader_id) noexcept;
+		static void link_program(std::uint32_t id) noexcept;
+	
 		static void delete_buffer(std::uint32_t id) noexcept;
 		static void delete_vertex_array(std::uint32_t id) noexcept;
 		static void delete_texture(std::uint32_t id) noexcept;
+		static void delete_shader(std::uint32_t id) noexcept;
+		static void delete_program(std::uint32_t id) noexcept;
 
 		static std::uint32_t native_from(topology topology) noexcept;
 		static factors native_from(blend blend) noexcept;
+		static std::uint32_t native_from(shader type) noexcept;
 	};
 
 }

@@ -97,7 +97,7 @@ namespace retro::graphics
 
 		void unbind() const noexcept
 		{
-			gl::bind_texture(0);
+			gl::bind_texture(gl::INVALID_ID);
 		}
 
 		texture_t m_handler;

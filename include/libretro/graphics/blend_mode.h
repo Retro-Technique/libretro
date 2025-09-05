@@ -46,14 +46,14 @@
 namespace retro::graphics
 {
 
-	struct vertex_array_t
+	struct blend_mode_t
 	{
-		std::uint32_t id;
-		std::uint32_t topology;
+		std::uint32_t srcfactor;
+		std::uint32_t dstfactor;
 	};
 
 	template<>
-	class resource<vertex_array_t>
+	class resource<blend_mode_t>
 	{
 		template<typename T>
 		friend class resource_binder;
@@ -62,70 +62,42 @@ namespace retro::graphics
 
 		resource() = delete;
 
-		explicit resource(topology topology) noexcept
-			: m_handler{ 0 }
+		explicit resource(blend blend) noexcept
+			: m_handler{0}
 		{
-			m_handler.id = gl::gen_vertex_array();
-			m_handler.topology = gl::native_from(topology);
+			m_handler.srcfactor = gl::native_from(blend).first;
+			m_handler.dstfactor = gl::native_from(blend).second;
 		}
 
-		~resource()
-		{
-			gl::delete_vertex_array(m_handler.id);
-		}
-
+		~resource() = default;
 		resource(const resource&) = delete;
 		resource& operator=(const resource&) = delete;
 		resource(resource&&) noexcept = default;
 		resource& operator=(resource&&) noexcept = default;
 
-		void enable_attribute_position(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_position(location);
-		}
-
-		void enable_attribute_color(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_color(location);
-		}
-
-		void enable_attribute_tex_coord(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_tex_coord(location);
-		}
-
 	private:
 
 		void bind() const noexcept
 		{
-			gl::bind_vertex_array(m_handler.id);
+			gl::blend_func(m_handler.srcfactor, m_handler.dstfactor);
 		}
 
 		void unbind() const noexcept
 		{
-			gl::bind_vertex_array(gl::INVALID_ID);
+			gl::blend_func(0u, 0u);
 		}
 
-		vertex_array_t m_handler;
+		blend_mode_t m_handler;
 
 	};
 
-	using vertex_array = resource<vertex_array_t>;
+	using blend_mode = resource<blend_mode_t>;
 
-	inline vertex_array make_vertex_array(topology topology)
+	inline blend_mode make_blend_mode(blend blend)
 	{
-		vertex_array vao(topology);
-
-		return vao;
+		blend_mode bm(blend);
+	
+		return bm;
 	}
 
 }

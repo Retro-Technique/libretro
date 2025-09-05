@@ -46,14 +46,13 @@
 namespace retro::graphics
 {
 
-	struct vertex_array_t
+	struct shader_program_t
 	{
 		std::uint32_t id;
-		std::uint32_t topology;
 	};
 
 	template<>
-	class resource<vertex_array_t>
+	class resource<shader_program_t>
 	{
 		template<typename T>
 		friend class resource_binder;
@@ -62,16 +61,18 @@ namespace retro::graphics
 
 		resource() = delete;
 
-		explicit resource(topology topology) noexcept
-			: m_handler{ 0 }
+		explicit resource(const fragment_shader_source& fs, const vertex_shader_source& vs) noexcept
+			: m_handler{0}
 		{
-			m_handler.id = gl::gen_vertex_array();
-			m_handler.topology = gl::native_from(topology);
+			m_handler.id = gl::create_program();
+			gl::attach_shader(m_handler.id, fs());
+			gl::attach_shader(m_handler.id, vs());
+			gl::link_program(m_handler.id);
 		}
 
 		~resource()
 		{
-			gl::delete_vertex_array(m_handler.id);
+			gl::delete_program(m_handler.id);
 		}
 
 		resource(const resource&) = delete;
@@ -79,53 +80,29 @@ namespace retro::graphics
 		resource(resource&&) noexcept = default;
 		resource& operator=(resource&&) noexcept = default;
 
-		void enable_attribute_position(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_position(location);
-		}
-
-		void enable_attribute_color(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_color(location);
-		}
-
-		void enable_attribute_tex_coord(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_tex_coord(location);
-		}
-
 	private:
 
 		void bind() const noexcept
 		{
-			gl::bind_vertex_array(m_handler.id);
+			gl::use_program(m_handler.id);
 		}
 
 		void unbind() const noexcept
 		{
-			gl::bind_vertex_array(gl::INVALID_ID);
+			gl::use_program(gl::INVALID_ID);
 		}
 
-		vertex_array_t m_handler;
+		shader_program_t m_handler;
 
 	};
 
-	using vertex_array = resource<vertex_array_t>;
+	using shader_program = resource<shader_program_t>;
 
-	inline vertex_array make_vertex_array(topology topology)
+	inline shader_program make_shader_program(fragment_shader_source fs, vertex_shader_source vs)
 	{
-		vertex_array vao(topology);
+		shader_program sp(fs, vs);
 
-		return vao;
+		return sp;
 	}
 
 }
