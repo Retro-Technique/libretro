@@ -3,7 +3,7 @@
 #include <libretro/graphics.h>
 #include <boost/log/trivial.hpp>
 
-static constexpr const auto VERTEX_SHADER =
+static constexpr auto VERTEX_SHADER =
 "#version 330 core\n"
 
 "layout(location = 0) in vec2 vPos;\n"
@@ -18,7 +18,7 @@ static constexpr const auto VERTEX_SHADER =
 "    color = vCol;\n"
 "}\n";
 
-static constexpr const auto FRAGMENT_SHADER =
+static constexpr auto FRAGMENT_SHADER =
 "#version 330 core\n"
 
 "in vec4 color;\n"
@@ -28,3 +28,13 @@ static constexpr const auto FRAGMENT_SHADER =
 "{\n"
 "    fragColor = color;\n"
 "}\n";
+
+namespace rg = retro::graphics;
+namespace rm = retro::math;
+
+static constexpr rg::vertex VERTICES[] =
+{
+    { { 320.f,  40.f }, { 255, 0, 0, 255 }, { 0.f, 0.f } },
+    { {  40.f, 440.f }, { 255, 0, 0, 255 }, { 0.f, 0.f } },
+    { { 600.f, 440.f }, { 255, 0, 0, 255 }, { 0.f, 0.f } }
+};

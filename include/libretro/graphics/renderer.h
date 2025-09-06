@@ -46,60 +46,57 @@
 namespace retro::graphics
 {
 
-	struct texture_t
+	class renderer
 	{
-		std::uint32_t id;
-	};
-
-	template<>
-	class resource<texture_t>
-	{
-		template<typename T>
-		friend class resource_binder;
-		template<typename T>
-		friend class resource;
-
 	public:
 
-		resource() = delete;
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
+		renderer() = delete;
+		~renderer() = default;
+		renderer(const renderer&) = delete;
+		renderer& operator=(const renderer&) = delete;
+		renderer(renderer&&) noexcept = default;
+		renderer& operator=(renderer&&) noexcept = default;
 
-		explicit resource(std::span<const std::byte> data, const math::size2s& size, bool repeated, bool smoothed) GL_NOEXCEPT
-			: m_handler{ 0 }
+		renderer(const window& window) GL_NOEXCEPT
+			: m_window(window)
 		{
-			m_handler.id = gl::gen_texture();
-
-			resource_binder binder(*this);
-			gl::tex_parameter_min_filter(smoothed);
-			gl::tex_parameter_mag_filter(smoothed);
-			gl::tex_parameter_wrap_s(repeated);
-			gl::tex_parameter_wrap_t(repeated);
-			gl::tex_image_2D_from_memory(data, math::size2i(size.w, size.h));
+			gl::load_GL();
 		}
 
-		~resource()
+		void viewport(const math::intrect& rc) const GL_NOEXCEPT
 		{
-			gl::delete_texture(m_handler.id);
-		}		
+			gl::viewport(rc);
+		}
+
+		void clear(const image::color& clear = image::Black) const GL_NOEXCEPT
+		{
+			gl::clear_color(clear);
+			gl::clear();
+		}
+
+		void draw(std::reference_wrapper<const vertex_buffer> vbo,
+				  std::reference_wrapper<const vertex_array> vao,
+				  std::reference_wrapper<const blend_mode> bm,
+				  std::reference_wrapper<const shader_program> sp,
+				  std::reference_wrapper<const matrix4x4> model,
+				  std::reference_wrapper<const matrix4x4> view,
+				  std::reference_wrapper<const matrix4x4> projection) const GL_NOEXCEPT
+		{
+			resource_binder bind_vbo(vbo.get());
+			resource_binder bind_vao(vao.get());
+			resource_binder bind_bm(bm.get());
+			resource_binder bind_sp(sp.get());
+
+			const matrix4x4 mvp = model.get() * view.get() * projection.get();
+			sp.get().set("MVP", mvp);
+
+			gl::draw_arrays(vao.get().topology(), vbo.get().vertex_count());
+		}
 
 	private:
 
-		void bind() const GL_NOEXCEPT
-		{
-			gl::bind_texture(m_handler.id);
-		}
+		std::reference_wrapper<const window> m_window;
 
-		void unbind() const GL_NOEXCEPT
-		{
-			gl::bind_texture(gl::INVALID_ID);
-		}
-
-		texture_t m_handler;
 	};
-
-	using texture = resource<texture_t>;
 
 }

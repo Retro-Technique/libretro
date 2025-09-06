@@ -52,6 +52,7 @@
 
 #include "graphics/export.h"
 #include "graphics/vertex.h"
+#include "graphics/matrix4x4.h"
 #include "graphics/topology.h"
 #include "graphics/blend.h"
 #include "graphics/shader.h"
@@ -60,10 +61,12 @@
 #include "graphics/resource.h"
 #include "graphics/resource_binder.h"
 #include "graphics/vertex_buffer.h"
+#include "graphics/shader_program.h"
 #include "graphics/vertex_array.h"
 #include "graphics/texture.h"
+#include "graphics/frame_buffer.h"
 #include "graphics/blend_mode.h"
-#include "graphics/shader_program.h"
 #include "graphics/window.h"
+#include "graphics/renderer.h"
 
 #endif

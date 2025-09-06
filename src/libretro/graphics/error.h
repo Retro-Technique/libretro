@@ -54,9 +54,18 @@ static inline const char* GLErrorToString(GLenum err)
     }
 }
 
-static void glfwErrorCallback(int error_code, const char* description)
+
+
+static std::string s_error;
+
+static void glfwErrorCallback(int, const char* description)
 {
-    std::cerr << "[GLFW] [" << error_code << "] : " << description << std::endl;
+    s_error = description;
+}
+
+static const char* glfwGetLastError()
+{
+    return s_error.c_str();
 }
 
 #define glCheckError(funcname) \
@@ -64,9 +73,9 @@ static void glfwErrorCallback(int error_code, const char* description)
     const GLenum glret = glGetError(); \
     if (glret != GL_NO_ERROR) \
     { \
-        std::cerr << "[OpenGL] " << funcname << " : " << GLErrorToString(glret) << std::endl; \
+        throw std::runtime_error(std::format("[OpenGL] {} : {}", funcname, GLErrorToString(glret))); \
     } \
-}\
+}
 
 #ifdef _DEBUG
 #define glCheck(glfunction) glfunction;glCheckError(#glfunction);

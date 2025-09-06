@@ -1,35 +1,30 @@
 #include "pch.h"
-#include "triangle.h"
 
 int main(int argc, char* argv[])
 {
 	try
 	{
-		retro::graphics::window::info window_info
+		rg::window window("OpenGL Triangle", { 640, 480 }, false, false);
+		rg::renderer renderer(window);
+		
+		const rg::matrix4x4 projection = rg::matrix4x4::ortho(0.f, 640.f, 480.f, 0.f);
+		const rg::matrix4x4 view;
+
+		const rg::vertex_shader_source vs(VERTEX_SHADER);
+		const rg::fragment_shader_source fs(FRAGMENT_SHADER);
+		const rg::shader_program sp(fs, vs);
+		const rg::vertex_buffer vbo(VERTICES);
+		const rg::vertex_array vao(vbo, rg::topology::triangles, sp, "vPos", "vCol");
+		const rg::blend_mode bm(rg::blend::alpha);
+		const rg::matrix4x4 model;
+
+		while (!window.should_close())
 		{
-			._title{"OpenGL Triangle"},
-			._size{640, 480},
-			._fullscreen{false}
-		};
-
-		retro::graphics::render_window render_window;
-
-		bool succeeded = render_window.create(window_info);
-		if (!succeeded)
-		{
-			return EXIT_FAILURE;
-		}
-
-		retro::graphics::shader shader(VERTEX_SHADER, FRAGMENT_SHADER);
-
-		triangle triangle(shader);
-
-		while (!render_window.should_close())
-		{
-			render_window.poll_events();
-			render_window.begin_scene();
-			render_window.draw(triangle);
-			render_window.end_scene();
+			window.poll_events();
+			renderer.viewport({ 0, 0, 640, 480 });
+			renderer.clear();
+			renderer.draw(vbo, vao, bm, sp, model, view, projection);
+			window.swap_buffers();
 		}
 	}
 	catch (const std::exception& e)

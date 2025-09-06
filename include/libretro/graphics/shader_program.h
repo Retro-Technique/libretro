@@ -60,9 +60,13 @@ namespace retro::graphics
 	public:
 
 		resource() = delete;
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
 
-		explicit resource(const fragment_shader_source& fs, const vertex_shader_source& vs) noexcept
-			: m_handler{0}
+		explicit resource(const fragment_shader_source& fs, const vertex_shader_source& vs) GL_NOEXCEPT
+			: m_handler{ 0 }
 		{
 			m_handler.id = gl::create_program();
 			gl::attach_shader(m_handler.id, fs());
@@ -75,19 +79,73 @@ namespace retro::graphics
 			gl::delete_program(m_handler.id);
 		}
 
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
+		void set(std::string_view name, std::int32_t value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_1i(location, value);
+		}
+
+		void set(std::string_view name, std::uint32_t value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_1u(location, value);
+		}
+
+		void set(std::string_view name, std::float_t value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_1f(location, value);
+		}
+
+		void set(std::string_view name, std::double_t value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_1d(location, value);
+		}
+
+		void set(std::string_view name, const math::vector2i& value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_2i(location, value);
+		}
+
+		void set(std::string_view name, const math::vector2u& value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_2u(location, value);
+		}
+
+		void set(std::string_view name, const math::vector2f& value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_2f(location, value);
+		}
+
+		void set(std::string_view name, const math::vector2d& value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_2d(location, value);
+		}
+
+		void set(std::string_view name, const matrix4x4& value) const GL_NOEXCEPT
+		{
+			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
+			gl::uniform_matrix(location, value);
+		}
+
+		[[nodiscard]] std::int32_t attribute_location(std::string_view name) const noexcept
+		{
+			return gl::attribute_location(m_handler.id, name);
+		}
 
 	private:
 
-		void bind() const noexcept
+		void bind() const GL_NOEXCEPT
 		{
 			gl::use_program(m_handler.id);
 		}
 
-		void unbind() const noexcept
+		void unbind() const GL_NOEXCEPT
 		{
 			gl::use_program(gl::INVALID_ID);
 		}
@@ -97,12 +155,5 @@ namespace retro::graphics
 	};
 
 	using shader_program = resource<shader_program_t>;
-
-	inline shader_program make_shader_program(fragment_shader_source fs, vertex_shader_source vs)
-	{
-		shader_program sp(fs, vs);
-
-		return sp;
-	}
 
 }

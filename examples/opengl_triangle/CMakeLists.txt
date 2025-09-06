@@ -1,9 +1,7 @@
 find_package(Boost REQUIRED COMPONENTS log)
 
 add_executable(${PROJECT_NAME}-example-opengl_triangle
-    "main.cpp" 
-    "triangle.h"
-    "triangle.cpp"    
+    "main.cpp"    
     "pch.cpp"
     "pch.h"
 )

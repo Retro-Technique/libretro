@@ -61,12 +61,43 @@ namespace retro::graphics
 	public:
 
 		resource() = delete;
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
 
-		explicit resource(topology topology) noexcept
+		explicit resource(topology topology) GL_NOEXCEPT
 			: m_handler{ 0 }
 		{
 			m_handler.id = gl::gen_vertex_array();
 			m_handler.topology = gl::native_from(topology);
+		}
+
+		explicit resource(const vertex_buffer& vbo, topology topology, const shader_program& sp, std::string_view position, std::string_view color) GL_NOEXCEPT
+			: resource(topology)
+		{
+			resource_binder bind_vao(*this);
+			resource_binder bind_vbo(vbo);
+
+			const std::int32_t pos_location = sp.attribute_location(position);
+			const std::int32_t color_location = sp.attribute_location(color);
+
+			gl::enable_vertex_attrib_array(pos_location);
+			gl::vertex_attrib_pointer_position(pos_location);
+			gl::enable_vertex_attrib_array(color_location);
+			gl::vertex_attrib_pointer_color(color_location);
+		}
+
+		explicit resource(const vertex_buffer& vbo, topology topology, const shader_program& sp, std::string_view position, std::string_view color, std::string_view texture) GL_NOEXCEPT
+			: resource(vbo, topology, sp, position, color)
+		{
+			resource_binder bind_vao(*this);
+			resource_binder bind_vbo(vbo);
+
+			const std::int32_t tex_location = sp.attribute_location(texture);
+
+			gl::enable_vertex_attrib_array(tex_location);
+			gl::vertex_attrib_pointer_tex_coord(tex_location);
 		}
 
 		~resource()
@@ -74,43 +105,19 @@ namespace retro::graphics
 			gl::delete_vertex_array(m_handler.id);
 		}
 
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
-
-		void enable_attribute_position(std::uint32_t location) const noexcept
+		[[no_discard]] std::uint32_t topology() const noexcept
 		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_position(location);
-		}
-
-		void enable_attribute_color(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_color(location);
-		}
-
-		void enable_attribute_tex_coord(std::uint32_t location) const noexcept
-		{
-			resource_binder binder(*this);
-
-			gl::enable_vertex_attrib_array(location);
-			gl::vertex_attrib_pointer_tex_coord(location);
+			return m_handler.topology;
 		}
 
 	private:
 
-		void bind() const noexcept
+		void bind() const GL_NOEXCEPT
 		{
 			gl::bind_vertex_array(m_handler.id);
 		}
 
-		void unbind() const noexcept
+		void unbind() const GL_NOEXCEPT
 		{
 			gl::bind_vertex_array(gl::INVALID_ID);
 		}
@@ -120,12 +127,5 @@ namespace retro::graphics
 	};
 
 	using vertex_array = resource<vertex_array_t>;
-
-	inline vertex_array make_vertex_array(topology topology)
-	{
-		vertex_array vao(topology);
-
-		return vao;
-	}
 
 }

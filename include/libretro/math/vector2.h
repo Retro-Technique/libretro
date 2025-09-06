@@ -72,7 +72,7 @@ namespace retro::math
 				T w, h;
 			};
 		};
-	};
+	};	
 
 	using vector2f = vector2<std::float_t>;
 	using vector2d = vector2<std::double_t>;

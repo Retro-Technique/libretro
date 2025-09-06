@@ -46,60 +46,99 @@
 namespace retro::graphics
 {
 
-	struct texture_t
+	struct matrix4x4
 	{
-		std::uint32_t id;
+		constexpr matrix4x4() noexcept
+			: m{ 1.f, 0.f, 0.f, 0.f,
+				 0.f, 1.f, 0.f, 0.f,
+				 0.f, 0.f, 1.f, 0.f,
+				 0.f, 0.f, 0.f, 1.f }
+		{
+		}
+
+		constexpr std::float_t& operator()(std::size_t col, std::size_t row) noexcept
+		{
+			return m[col * 4 + row];
+		}
+
+		constexpr std::float_t operator()(std::size_t col, std::size_t row) const noexcept
+		{
+			return m[col * 4 + row];
+		}
+
+		constexpr matrix4x4 operator*(const matrix4x4& rhs) const noexcept
+		{
+			matrix4x4 result{};
+
+			for (std::int32_t c = 0; c < 4; ++c)
+			{
+				for (std::int32_t r = 0; r < 4; ++r)
+				{
+					result(c, r) = 0.f;
+					for (std::int32_t k = 0; k < 4; ++k)
+					{
+						result(c, r) += (*this)(k, r) * rhs(c, k);
+					}
+				}
+			}
+
+			return result;
+		}
+
+		static constexpr matrix4x4 translation(std::float_t tx, std::float_t ty) noexcept
+		{
+			matrix4x4 mat{};
+
+			mat(3, 0) = tx;
+			mat(3, 1) = ty;
+
+			return mat;
+		}
+
+		static constexpr matrix4x4 scaling(std::float_t sx, std::float_t sy) noexcept
+		{
+			matrix4x4 mat{};
+
+			mat(0, 0) = sx;
+			mat(1, 1) = sy;
+
+			return mat;
+		}
+
+		static matrix4x4 rotation(std::float_t radians) noexcept
+		{
+			matrix4x4 mat{};
+
+			const std::float_t c = std::cos(radians);
+			const std::float_t s = std::sin(radians);
+
+			mat(0, 0) = c;
+			mat(1, 0) = -s;
+			mat(0, 1) = s;
+			mat(1, 1) = c;
+
+			return mat;
+		}
+
+		static constexpr matrix4x4 ortho(std::float_t left, std::float_t right,
+										 std::float_t bottom, std::float_t top,
+										 std::float_t znear = -1.f, std::float_t zfar = 1.f) noexcept
+		{
+			matrix4x4 mat{};
+
+			mat(0, 0) = 2.f / (right - left);
+			mat(1, 1) = 2.f / (top - bottom);
+			mat(2, 2) = -2.f / (zfar - znear);
+
+			mat(3, 0) = -(right + left) / (right - left);
+			mat(3, 1) = -(top + bottom) / (top - bottom);
+			mat(3, 2) = -(zfar + znear) / (zfar - znear);
+			mat(3, 3) = 1.f;
+
+			return mat;
+		}
+
+		std::array<std::float_t, 16> m;
 	};
-
-	template<>
-	class resource<texture_t>
-	{
-		template<typename T>
-		friend class resource_binder;
-		template<typename T>
-		friend class resource;
-
-	public:
-
-		resource() = delete;
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
-
-		explicit resource(std::span<const std::byte> data, const math::size2s& size, bool repeated, bool smoothed) GL_NOEXCEPT
-			: m_handler{ 0 }
-		{
-			m_handler.id = gl::gen_texture();
-
-			resource_binder binder(*this);
-			gl::tex_parameter_min_filter(smoothed);
-			gl::tex_parameter_mag_filter(smoothed);
-			gl::tex_parameter_wrap_s(repeated);
-			gl::tex_parameter_wrap_t(repeated);
-			gl::tex_image_2D_from_memory(data, math::size2i(size.w, size.h));
-		}
-
-		~resource()
-		{
-			gl::delete_texture(m_handler.id);
-		}		
-
-	private:
-
-		void bind() const GL_NOEXCEPT
-		{
-			gl::bind_texture(m_handler.id);
-		}
-
-		void unbind() const GL_NOEXCEPT
-		{
-			gl::bind_texture(gl::INVALID_ID);
-		}
-
-		texture_t m_handler;
-	};
-
-	using texture = resource<texture_t>;
 
 }

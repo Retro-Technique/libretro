@@ -51,15 +51,15 @@ namespace retro::graphics
 	{
 	public:
 
-		explicit resource_binder(const resource<T>& resource) noexcept
+		explicit resource_binder(const resource<T>& resource) GL_NOEXCEPT
 			: m_resource(resource)
 		{
-			m_resource.bind();
+			m_resource.get().bind();
 		}
 
 		~resource_binder()
 		{
-			m_resource.unbind();
+			m_resource.get().unbind();
 		}
 
 		resource_binder(const resource_binder&) = delete;
@@ -69,7 +69,7 @@ namespace retro::graphics
 
 	private:
 
-		const resource<T>& m_resource;
+		std::reference_wrapper<const resource<T>> m_resource;
 	};
 
 }

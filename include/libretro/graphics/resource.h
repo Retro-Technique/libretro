@@ -54,7 +54,7 @@ namespace retro::graphics
 
 	public:
 
-		resource() noexcept = default;
+		resource() GL_NOEXCEPT = default;
 		~resource() = default;
 		resource(const resource&) = delete;
 		resource& operator=(const resource&) = delete;
@@ -63,8 +63,8 @@ namespace retro::graphics
 
 	private:
 
-		void bind() const noexcept;
-		void unbind() const noexcept;
+		void bind() const GL_NOEXCEPT;
+		void unbind() const GL_NOEXCEPT;
 
 		T m_handler;
 	};

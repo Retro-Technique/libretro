@@ -61,28 +61,27 @@ namespace retro::graphics
 	public:
 
 		resource() = delete;
-
-		explicit resource(blend blend) noexcept
-			: m_handler{0}
-		{
-			m_handler.srcfactor = gl::native_from(blend).first;
-			m_handler.dstfactor = gl::native_from(blend).second;
-		}
-
 		~resource() = default;
 		resource(const resource&) = delete;
 		resource& operator=(const resource&) = delete;
 		resource(resource&&) noexcept = default;
 		resource& operator=(resource&&) noexcept = default;
 
+		explicit resource(blend blend) noexcept
+			: m_handler{ 0 }
+		{
+			m_handler.srcfactor = gl::native_from(blend).first;
+			m_handler.dstfactor = gl::native_from(blend).second;
+		}
+
 	private:
 
-		void bind() const noexcept
+		void bind() const GL_NOEXCEPT
 		{
 			gl::blend_func(m_handler.srcfactor, m_handler.dstfactor);
 		}
 
-		void unbind() const noexcept
+		void unbind() const GL_NOEXCEPT
 		{
 			gl::blend_func(0u, 0u);
 		}
@@ -92,12 +91,5 @@ namespace retro::graphics
 	};
 
 	using blend_mode = resource<blend_mode_t>;
-
-	inline blend_mode make_blend_mode(blend blend)
-	{
-		blend_mode bm(blend);
-	
-		return bm;
-	}
 
 }

@@ -46,50 +46,50 @@
 namespace retro::graphics
 {
 
-	class LIBRETRO_GRAPHICS_API window
+	class window
 	{
 	public:
 
-		struct info
+		window(std::string_view title, math::size2s window_size, bool fullscreen, bool resizable)
+			: m_window(nullptr, nullptr)
 		{
-			std::string		_title;
-			math::vector2s	_size;
-			bool			_fullscreen;
-		};
+			gl::initialize();
 
-#pragma region Constructors
+			gl::window_ptr window = gl::create_window(title, window_size, fullscreen, resizable, 0);
+			m_window = std::move(window);
 
-	public:
+			gl::make_context_current(m_window);
+		}
 
-		window() noexcept;
-		~window();
+		~window()
+		{
+			gl::terminate();
+		}
+
 		window(const window&) = delete;
 		window& operator=(const window&) = delete;
+		window(window&&) noexcept = default;
+		window& operator=(window&&) noexcept = default;
 
-#pragma endregion
-#pragma region Attributes
+		void poll_events() const noexcept
+		{
+			gl::poll_events();
+		}
 
-	protected:
+		bool should_close() const noexcept
+		{
+			return gl::should_close(m_window);
+		}
 
-		void* m_window;
+		void swap_buffers() noexcept
+		{
+			gl::swap_buffers(m_window);
+		}
 
-#pragma endregion
-#pragma region Operations
+	private:
 
-	public:
+		gl::window_ptr m_window;
 
-		math::vector2s size() const noexcept;
-		void poll_events() const noexcept;
-		bool should_close() const noexcept;
-
-#pragma endregion
-#pragma region Overridables
-
-	public:
-
-		virtual bool create(const info& info) noexcept;
-
-#pragma endregion
 	};
 
 }

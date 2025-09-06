@@ -48,7 +48,8 @@ namespace retro::graphics
 
 	struct vertex_buffer_t
 	{
-		std::uint32_t id;
+		std::uint32_t	id;
+		std::int32_t	vertex_count;
 	};
 
 	template<>
@@ -60,14 +61,20 @@ namespace retro::graphics
 	public:
 
 		resource() = delete;
+		resource(const resource&) = delete;
+		resource& operator=(const resource&) = delete;
+		resource(resource&&) noexcept = default;
+		resource& operator=(resource&&) noexcept = default;
 
-		explicit resource(std::span<const vertex> vertices) noexcept
+		explicit resource(std::span<const vertex> vertices) GL_NOEXCEPT
 			: m_handler{ 0 }
 		{
 			m_handler.id = gl::gen_buffer();
 
 			resource_binder binder(*this);
 			gl::buffer_data(vertices);
+
+			m_handler.vertex_count = static_cast<std::int32_t>(vertices.size());
 		}
 
 		~resource()
@@ -75,19 +82,19 @@ namespace retro::graphics
 			gl::delete_buffer(m_handler.id);
 		}
 
-		resource(const resource&) = delete;
-		resource& operator=(const resource&) = delete;
-		resource(resource&&) noexcept = default;
-		resource& operator=(resource&&) noexcept = default;
+		std::int32_t vertex_count() const noexcept
+		{
+			return m_handler.vertex_count;
+		}
 
 	private:
 
-		void bind() const noexcept
+		void bind() const GL_NOEXCEPT
 		{
 			gl::bind_buffer(m_handler.id);
 		}
 
-		void unbind() const noexcept
+		void unbind() const GL_NOEXCEPT
 		{
 			gl::bind_buffer(gl::INVALID_ID);
 		}
@@ -96,12 +103,5 @@ namespace retro::graphics
 	};
 
 	using vertex_buffer = resource<vertex_buffer_t>;
-
-	inline vertex_buffer make_vertex_buffer(std::span<const vertex> vertices)
-	{
-		vertex_buffer vbo(vertices);
-
-		return vbo;
-	}
 
 }

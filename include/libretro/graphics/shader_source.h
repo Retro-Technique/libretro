@@ -49,14 +49,15 @@ namespace retro::graphics
 	template<shader T>
 	class shader_source
 	{
-		friend class fragment_shader_program;
-		friend class vertex_shader_program;
-
 	public:
 
 		shader_source() = delete;
+		shader_source(const shader_source&) = delete;
+		shader_source& operator=(const shader_source&) = delete;
+		shader_source(shader_source&&) noexcept = default;
+		shader_source& operator=(shader_source&&) noexcept = default;
 
-		shader_source(std::string_view src) noexcept
+		shader_source(std::string_view src) GL_NOEXCEPT
 			: m_id(0)
 		{
 			m_id = gl::create_shader(T);
@@ -68,11 +69,6 @@ namespace retro::graphics
 		{
 			gl::delete_shader(m_id);
 		}
-
-		shader_source(const shader_source&) = delete;
-		shader_source& operator=(const shader_source&) = delete;
-		shader_source(shader_source&&) noexcept = default;
-		shader_source& operator=(shader_source&&) noexcept = default;
 
 		std::uint32_t operator()() const noexcept
 		{
@@ -87,19 +83,5 @@ namespace retro::graphics
 
 	using fragment_shader_source = shader_source<shader::fragment>;
 	using vertex_shader_source = shader_source<shader::vertex>;
-
-	inline fragment_shader_source make_fragment_shader_source(std::string_view src)
-	{
-		fragment_shader_source fs(src);
-
-		return fs;
-	}
-
-	inline vertex_shader_source make_vertex_shader_source(std::string_view src)
-	{
-		vertex_shader_source vs(src);
-
-		return vs;
-	}
 
 }

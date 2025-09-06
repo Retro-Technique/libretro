@@ -43,18 +43,18 @@ namespace retro::image
 #pragma region Constructors
 
 	constexpr pixel::pixel() noexcept
-		: red(0)
-		, green(0)
-		, blue(0)
-		, alpha(ALPHA_OPAQUE)
+		: r(0)
+		, g(0)
+		, b(0)
+		, a(ALPHA_OPAQUE)
 	{
 	}
 
 	constexpr pixel::pixel(const pixel& other) noexcept
-		: red(other.red)
-		, green(other.green)
-		, blue(other.blue)
-		, alpha(other.alpha)
+		: r(other.r)
+		, g(other.g)
+		, b(other.b)
+		, a(other.a)
 	{
 	}
 
@@ -64,10 +64,10 @@ namespace retro::image
 	}
 
 	constexpr pixel::pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha) noexcept
-		: red(red)
-		, green(green)
-		, blue(blue)
-		, alpha(alpha)
+		: r(red)
+		, g(green)
+		, b(blue)
+		, a(alpha)
 	{
 	}
 
@@ -76,25 +76,25 @@ namespace retro::image
 
 	[[nodiscard]] constexpr bool pixel::is_opaque() const noexcept
 	{
-		return alpha == ALPHA_OPAQUE;
+		return a == ALPHA_OPAQUE;
 	}
 
 	[[nodiscard]] constexpr bool pixel::is_transparent() const noexcept
 	{
-		return alpha == ALPHA_TRANSPARENT;
+		return a == ALPHA_TRANSPARENT;
 	}
 
 	[[nodiscard]] constexpr std::uint32_t pixel::to_integer() const noexcept
 	{
-		return (red << 24) | (green << 16) | (blue << 8) | alpha;
+		return (r << 24) | (g << 16) | (b << 8) | a;
 	}
 
 	constexpr void pixel::from_integer(std::uint32_t value) noexcept
 	{
-		red = static_cast<std::uint8_t>((value & 0xff000000) >> 24);
-		green = static_cast<std::uint8_t>((value & 0x00ff0000) >> 16);
-		blue = static_cast<std::uint8_t>((value & 0x0000ff00) >> 8);
-		alpha = static_cast<std::uint8_t>((value & 0x000000ff) >> 0);
+		r = static_cast<std::uint8_t>((value & 0xff000000) >> 24);
+		g = static_cast<std::uint8_t>((value & 0x00ff0000) >> 16);
+		b = static_cast<std::uint8_t>((value & 0x0000ff00) >> 8);
+		a = static_cast<std::uint8_t>((value & 0x000000ff) >> 0);
 	}
 
 #pragma endregion
@@ -103,30 +103,30 @@ namespace retro::image
 	[[nodiscard]] constexpr pixel pixel::operator+(const pixel& other) noexcept
 	{
 		return pixel(
-			static_cast<std::uint8_t>(std::min(red + other.red, 255)),
-			static_cast<std::uint8_t>(std::min(green + other.green, 255)),
-			static_cast<std::uint8_t>(std::min(blue + other.blue, 255)),
-			static_cast<std::uint8_t>(std::min(alpha + other.alpha, 255))
+			static_cast<std::uint8_t>(std::min(r + other.r, 255)),
+			static_cast<std::uint8_t>(std::min(g + other.g, 255)),
+			static_cast<std::uint8_t>(std::min(b + other.b, 255)),
+			static_cast<std::uint8_t>(std::min(a + other.a, 255))
 		);
 	}
 
 	[[nodiscard]] constexpr pixel pixel::operator-(const pixel& other) noexcept
 	{
 		return pixel(
-			static_cast<std::uint8_t>(std::max(red - other.red, 0)),
-			static_cast<std::uint8_t>(std::max(green - other.green, 0)),
-			static_cast<std::uint8_t>(std::max(blue - other.blue, 0)),
-			static_cast<std::uint8_t>(std::max(alpha - other.alpha, 0))
+			static_cast<std::uint8_t>(std::max(r - other.r, 0)),
+			static_cast<std::uint8_t>(std::max(g - other.g, 0)),
+			static_cast<std::uint8_t>(std::max(b - other.b, 0)),
+			static_cast<std::uint8_t>(std::max(a - other.a, 0))
 		);
 	}
 
 	[[nodiscard]] constexpr pixel pixel::operator*(const pixel& other) noexcept
 	{
 		return pixel(
-			static_cast<std::uint8_t>(red * other.red / 255),
-			static_cast<std::uint8_t>(green * other.green / 255),
-			static_cast<std::uint8_t>(blue * other.blue / 255),
-			static_cast<std::uint8_t>(alpha * other.alpha / 255)
+			static_cast<std::uint8_t>(r * other.r / 255),
+			static_cast<std::uint8_t>(g * other.g / 255),
+			static_cast<std::uint8_t>(b * other.b / 255),
+			static_cast<std::uint8_t>(a * other.a / 255)
 		);
 	}
 
@@ -147,10 +147,10 @@ namespace retro::image
 
 	[[nodiscard]] constexpr bool pixel::operator==(const pixel& other) const noexcept
 	{
-		return red == other.red &&
-			green == other.green &&
-			blue == other.blue &&
-			alpha == other.alpha;
+		return r == other.r &&
+			g == other.g &&
+			b == other.b &&
+			a == other.a;
 	}
 
 	[[nodiscard]] constexpr bool pixel::operator!=(const pixel& other) const noexcept
@@ -163,10 +163,10 @@ namespace retro::image
 	inline std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept
 	{
 		return stream << "pixel(" 
-			<< pixel.red << ", "
-			<< pixel.green << ", "
-			<< pixel.blue << ", "
-			<< pixel.alpha << ")";
+			<< pixel.r << ", "
+			<< pixel.g << ", "
+			<< pixel.b << ", "
+			<< pixel.a << ")";
 	}
 
 }

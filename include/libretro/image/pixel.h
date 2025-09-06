@@ -53,7 +53,7 @@ namespace retro::image
 		constexpr pixel() noexcept;
 		constexpr pixel(const pixel& other) noexcept;
 		constexpr explicit pixel(std::uint32_t value) noexcept;
-		constexpr explicit pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
+		constexpr pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
 		~pixel() = default;
 
 #pragma endregion
@@ -62,10 +62,10 @@ namespace retro::image
 		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
 		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
 
-		std::uint8_t red;
-		std::uint8_t green;
-		std::uint8_t blue;
-		std::uint8_t alpha;
+		std::uint8_t r;
+		std::uint8_t g;
+		std::uint8_t b;
+		std::uint8_t a;
 
 #pragma endregion
 #pragma region Operations

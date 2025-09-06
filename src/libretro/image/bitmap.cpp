@@ -194,9 +194,9 @@ namespace retro::image
 		retro::image::pixel* pixels = reinterpret_cast<retro::image::pixel*>(m_pixels.data());
 		for (std::size_t i = 0; i < size(); i++)
 		{
-			if (pixels[i].red == pixel.red && pixels[i].green == pixel.green && pixels[i].blue == pixel.blue)
+			if (pixels[i].r == pixel.r && pixels[i].g == pixel.g && pixels[i].b == pixel.b)
 			{
-				pixels[i].alpha = alpha;
+				pixels[i].a = alpha;
 			}
 		}
 	}

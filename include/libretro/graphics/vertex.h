@@ -48,19 +48,17 @@ namespace retro::graphics
 
 	struct vertex
 	{
-		vertex() noexcept;
-		explicit vertex(const math::vector2f& position) noexcept;
-		vertex(const math::vector2f& position, const image::color& color) noexcept;
-		vertex(const math::vector2f& position, const math::vector2f& tex_coords) noexcept;
-		vertex(const math::vector2f& position, const image::color& color, const math::vector2f& tex_coords) noexcept;
-
 		math::vector2f	position;
 		image::color	color;
 		math::vector2f	tex_coords;
 	};
 
-	std::ostream& operator<<(std::ostream& stream, const vertex& vertex) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const vertex& vertex) noexcept
+	{
+		return stream << "vertex("
+			<< "position(" << vertex.position << ")" << ", "
+			<< "color(" << vertex.color << ")" << ","
+			<< "texcoord(" << vertex.tex_coords << ")" << ")";
+	}
 
 }
-
-#include "vertex.inl"
