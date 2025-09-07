@@ -39,60 +39,36 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_MATH_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/math.h> instead."
+#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/image.h> instead."
 #endif
 
-namespace retro::math
+namespace retro::image
 {
 
-	template<std::size_t N>
-	class matrix_stack
+	class bitmap::impl
 	{
-#pragma region Constructors
-
 	public:
 
-		constexpr matrix_stack() noexcept;
-		~matrix_stack() = default;
+		impl() = delete;
+		explicit impl(const math::size2s& size);
+		explicit impl(const std::filesystem::path& path);
+		~impl() = default;
+		impl(const impl&) = delete;
+		impl& operator=(const impl&) = delete;
+		impl(impl&&) noexcept = default;
+		impl& operator=(impl&&) noexcept = default;
 
-#pragma endregion
-#pragma region Attributes
+		math::size2s size() const noexcept;
+		std::size_t size_bytes() const noexcept;
+		std::span<const std::byte> data() const;
+		void flip_vertically();
+		void flip_horizontally();
 
 	private:
 
-		std::size_t m_current;
-		std::array<retro::math::matrix3x3, N> m_stack;
-
-#pragma endregion
-#pragma region Operations
-
-	public:
-
-		[[nodiscard]] constexpr const retro::math::matrix3x3& top() const noexcept;
-		[[nodiscard]] constexpr std::size_t size() const noexcept;
-		void pop() noexcept;
-		void push() noexcept;
-		void identity() noexcept;
-		void load(const retro::math::matrix3x3& matrix) noexcept;
-		void multiply(const retro::math::matrix3x3& matrix) noexcept;
-		void rotate(std::float_t angle, const retro::math::vector2f& origin) noexcept;
-		void scale(std::float_t factor, const retro::math::vector2f& origin) noexcept;
-		void translate(const retro::math::vector2f& translation) noexcept;
-
-#pragma endregion
-
-		friend std::ostream& operator<<(std::ostream& stream, const matrix_stack<N>& stack) noexcept;
+		boost::gil::rgba8_image_t m_image;
 
 	};
 
-	using matrix_stack_8 = matrix_stack<8>;
-	using matrix_stack_16 = matrix_stack<16>;
-	using matrix_stack_32 = matrix_stack<32>;
-
-	template<std::size_t N>
-	std::ostream& operator<<(std::ostream& stream, const matrix_stack<N>& stack) noexcept;
-
 }
-
-#include "matrix_stack.inl"

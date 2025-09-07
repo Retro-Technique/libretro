@@ -38,207 +38,49 @@
  */
 
 #include "pch.h"
+#include "bitmap.impl.h"
 
 namespace retro::image
 {
 
-#pragma region Constructors
-
-	bitmap::bitmap() noexcept
-		: m_width(0)
-		, m_height(0)
+	bitmap::bitmap(const math::size2s& size)
+		: m_pimpl(std::make_unique<impl>(size))
 	{
 	}
 
-#pragma endregion
-#pragma region Operations
-
-	void bitmap::create(std::size_t width, std::size_t height)
-	{
-		if (width == 0 || height == 0)
-		{
-			return;
-		}
-
-		m_width = width;
-		m_height = height;
-		m_pixels.resize(m_width * m_height * 4, pixel::ALPHA_TRANSPARENT);
+	bitmap::bitmap(const std::filesystem::path& path)
+		: m_pimpl(std::make_unique<impl>(path))
+	{		
 	}
 
-	void bitmap::load_from_file(const std::filesystem::path& path)
+	bitmap::~bitmap()
 	{
-		if (!std::filesystem::exists(path))
-		{
-			throw std::invalid_argument("File does not exist: " + path.string());
-		}
 
-		if (!std::filesystem::is_regular_file(path))
-		{
-			throw std::invalid_argument("Path is not a regular file: " + path.string());
-		}
-
-		clear();
-		
-		//boost::gil::rgba8_image_t img;
-		//boost::gil::rgba8_pixel_t pixel;
-		
-		//boost::gil::read_image(path.string(), img, boost::gil::png_tag{});
-		
-		//m_width = img.width();
-	//	m_height = img.height();
-
-	//	auto view = boost::gil::const_view(img);
-
-		//m_pixels.resize(m_width * m_height * 4);
-
-		//for (std::size_t y = 0; y < m_height; ++y)
-		//{
-		//	auto row = view.row_begin(y);
-		//	for (std::size_t x = 0; x < m_width; ++x)
-		//	{
-		//		const auto& px = row[x];
-		//		std::size_t idx = (y * m_width + x) * 4;
-		//		m_pixels[idx + 0] = px[0]; // R
-		//		m_pixels[idx + 1] = px[1]; // G
-		//		m_pixels[idx + 2] = px[2]; // B
-		//		m_pixels[idx + 3] = px[3]; // A
-		//	}
-		//}
 	}
 
-	void bitmap::load_from_memory(const std::uint8_t* buffer, std::size_t size_bytes)
+	math::size2s bitmap::size() const noexcept
 	{
-		if (!buffer || size_bytes == 0)
-		{
-			throw std::invalid_argument("Buffer is null or size is zero.");
-		}
-	
-		clear();
-
-		//int channel_count = 0;
-
-		/*std::unique_ptr<stbi_uc, void (*)(void*)> bmp(
-			stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha),
-			stbi_image_free);*/
-
-		//stbi_uc* data = stbi_load_from_memory(buffer, static_cast<int>(size_bytes), reinterpret_cast<int*>(&m_width), reinterpret_cast<int*>(&m_height), &channel_count, STBI_rgb_alpha);
-		//if (!data)
-		//{
-		//	throw std::runtime_error("Failed to load image from memory: " + std::string(stbi_failure_reason()));
-		//}
-
-		//if (channel_count != 4)
-		//{
-		//	stbi_image_free(data);
-		//	throw std::runtime_error("Image must have 4 channels (RGBA).");
-		//}
-
-		//m_pixels.assign(data, data + (m_width * m_height * 4));
-
-		//stbi_image_free(data);
+		return m_pimpl->size();
 	}
 
-	void bitmap::save_to_file(const std::filesystem::path& path) const
+	std::size_t bitmap::size_bytes() const noexcept
 	{
-		if (m_pixels.empty() || m_width == 0 || m_height == 0)
-		{
-			return;
-		}
-
-		if (!std::filesystem::exists(path))
-		{
-			throw std::invalid_argument("File does not exist: " + path.string());
-		}
-
-		if (!std::filesystem::is_regular_file(path))
-		{
-			throw std::invalid_argument("Path is not a regular file: " + path.string());
-		}
-
-		const std::string ext = path.extension().string();
-		//int ret = 1;
-
-		/*if (ext == ".png")
-		{
-			ret = stbi_write_png(path.string().c_str(), static_cast<int>(m_width), static_cast<int>(m_height), 4, m_pixels.data(), static_cast<int>(m_width) * 4);
-		}
-		else if (ext == ".jpg" || ext == ".jpeg")
-		{
-			ret = stbi_write_jpg(path.string().c_str(), static_cast<int>(m_width), static_cast<int>(m_height), 4, m_pixels.data(), 100);
-		}
-		else if (ext == ".bmp")
-		{
-			ret = stbi_write_bmp(path.string().c_str(), static_cast<int>(m_width), static_cast<int>(m_height), 4, m_pixels.data());
-		}*/
-
-		//if (ret == 0)
-		//{
-		//	throw std::runtime_error("Failed to save image: " + path.string() + " - " + stbi_failure_reason());
-		//}
+		return m_pimpl->size_bytes();
 	}
 
-	void bitmap::clear() noexcept
+	std::span<const std::byte> bitmap::data() const
 	{
-		m_width = 0;
-		m_height = 0;
-		m_pixels.clear();
+		return m_pimpl->data();
 	}
 
-	void bitmap::mask_from_pixel(const retro::image::pixel& pixel, std::uint8_t alpha) noexcept
+	void bitmap::flip_vertically()
 	{
-		if (m_pixels.empty() || m_width == 0 || m_height == 0)
-		{
-			return;
-		}
-
-		retro::image::pixel* pixels = reinterpret_cast<retro::image::pixel*>(m_pixels.data());
-		for (std::size_t i = 0; i < size(); i++)
-		{
-			if (pixels[i].r == pixel.r && pixels[i].g == pixel.g && pixels[i].b == pixel.b)
-			{
-				pixels[i].a = alpha;
-			}
-		}
+		m_pimpl->flip_vertically();
 	}
 
-	void bitmap::flip_vertical() noexcept
+	void bitmap::flip_horizontally()
 	{
-		if (m_pixels.empty() || m_width == 0 || m_height == 0)
-		{
-			return;
-		}
-
-		const std::size_t row_size = m_width * 4;
-		for (std::size_t y = 0; y < m_height / 2; ++y)
-		{
-			const std::size_t opposite_y = m_height - 1 - y;
-			for (std::size_t x = 0; x < row_size; ++x)
-			{
-				std::swap(m_pixels[y * row_size + x], m_pixels[opposite_y * row_size + x]);
-			}
-		}
-	}
-
-	void bitmap::flip_horizontal() noexcept
-	{
-		if (m_pixels.empty() || m_width == 0 || m_height == 0)
-		{
-			return;
-		}
-
-		const std::size_t row_size = m_width * 4;
-		for (std::size_t y = 0; y < m_height; ++y)
-		{
-			for (std::size_t x = 0; x < m_width / 2; ++x)
-			{
-				const std::size_t left = y * row_size + x * 4;
-				const std::size_t right = y * row_size + (m_width - 1 - x) * 4;
-				for (std::size_t c = 0; c < 4; ++c)
-				{
-					std::swap(m_pixels[left + c], m_pixels[right + c]);
-				}
-			}
-		}
+		m_pimpl->flip_horizontally();
 	}
 
 }

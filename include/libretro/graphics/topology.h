@@ -55,9 +55,6 @@ namespace retro::graphics
 		triangles,
 		triangle_strip,
 		triangle_fan,
-		quads,
-		quad_strip,
-		polygon,
 
 		COUNT
 	};

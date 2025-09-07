@@ -42,3 +42,6 @@
 #include <libretro/image.h>
 
 #include <boost/gil.hpp>
+#include <boost/gil/extension/io/png.hpp>
+#include <boost/gil/extension/io/jpeg.hpp>
+#include <boost/gil/extension/io/bmp.hpp>

@@ -68,29 +68,50 @@ namespace retro::graphics
 			gl::viewport(rc);
 		}
 
-		void clear(const image::color& clear = image::Black) const GL_NOEXCEPT
+		void clear(const image::color& clear = image::color::black()) const GL_NOEXCEPT
 		{
 			gl::clear_color(clear);
 			gl::clear();
 		}
 
-		void draw(std::reference_wrapper<const vertex_buffer> vbo,
-				  std::reference_wrapper<const vertex_array> vao,
-				  std::reference_wrapper<const blend_mode> bm,
-				  std::reference_wrapper<const shader_program> sp,
-				  std::reference_wrapper<const matrix4x4> model,
-				  std::reference_wrapper<const matrix4x4> view,
-				  std::reference_wrapper<const matrix4x4> projection) const GL_NOEXCEPT
+		void draw(const vertex_buffer& vbo,
+				  const vertex_array& vao,
+				  const blend_mode& bm,
+				  const shader_program& sp,
+				  const matrix4x4& model,
+				  const matrix4x4& view,
+				  const matrix4x4& projection) const GL_NOEXCEPT
 		{
-			resource_binder bind_vbo(vbo.get());
-			resource_binder bind_vao(vao.get());
-			resource_binder bind_bm(bm.get());
-			resource_binder bind_sp(sp.get());
+			resource_binder bind_vbo(vbo);
+			resource_binder bind_vao(vao);
+			resource_binder bind_bm(bm);
+			resource_binder bind_sp(sp);
 
-			const matrix4x4 mvp = model.get() * view.get() * projection.get();
-			sp.get().set("MVP", mvp);
+			const matrix4x4 mvp = model * view * projection;
+			sp.set("MVP", mvp);
 
-			gl::draw_arrays(vao.get().topology(), vbo.get().vertex_count());
+			gl::draw_arrays(vao.topology(), vbo.vertex_count());
+		}
+
+		void draw(const vertex_buffer& vbo,
+				  const vertex_array& vao,
+				  const blend_mode& bm,
+				  const shader_program& sp,
+				  const texture& tex,
+				  const matrix4x4& model,
+				  const matrix4x4& view,
+				  const matrix4x4& projection) const GL_NOEXCEPT
+		{
+			resource_binder bind_vbo(vbo);
+			resource_binder bind_vao(vao);
+			resource_binder bind_bm(bm);
+			resource_binder bind_sp(sp);
+			resource_binder bind_tex(tex);
+
+			const matrix4x4 mvp = model * view * projection;
+			sp.set("MVP", mvp);
+
+			gl::draw_arrays(vao.topology(), vbo.vertex_count());
 		}
 
 	private:

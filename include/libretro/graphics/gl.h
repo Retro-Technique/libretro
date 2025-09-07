@@ -126,16 +126,16 @@ namespace retro::graphics
 		static std::int32_t attribute_location(std::uint32_t id, std::string_view name) GL_NOEXCEPT;
 		static void framebuffer_texture2D(std::uint32_t texture_id) GL_NOEXCEPT;
 	
-		static void delete_buffer(std::uint32_t id) GL_NOEXCEPT;
-		static void delete_vertex_array(std::uint32_t id) GL_NOEXCEPT;
-		static void delete_texture(std::uint32_t id) GL_NOEXCEPT;
-		static void delete_shader(std::uint32_t id) GL_NOEXCEPT;
-		static void delete_program(std::uint32_t id) GL_NOEXCEPT;
-		static void delete_framebuffer(std::uint32_t id) GL_NOEXCEPT;
+		static void delete_buffer(std::uint32_t id) noexcept;
+		static void delete_vertex_array(std::uint32_t id) noexcept;
+		static void delete_texture(std::uint32_t id) noexcept;
+		static void delete_shader(std::uint32_t id) noexcept;
+		static void delete_program(std::uint32_t id) noexcept;
+		static void delete_framebuffer(std::uint32_t id) noexcept;
 
-		static std::uint32_t native_from(topology topology) GL_NOEXCEPT;
-		static factors native_from(blend blend) GL_NOEXCEPT;
-		static std::uint32_t native_from(shader type) GL_NOEXCEPT;
+		static std::uint32_t native_from(topology topology) noexcept;
+		static factors native_from(blend blend) noexcept;
+		static std::uint32_t native_from(shader type) noexcept;
 
 		static window_ptr create_window(std::string_view title, math::size2s window_size, bool fullscreen, bool resizable, std::int32_t framerate);
 		static void make_context_current(const window_ptr& window) GL_NOEXCEPT;

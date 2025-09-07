@@ -57,7 +57,5 @@
 #include "math/circle.h"
 #include "math/distance.h"
 #include "math/collide.h"
-#include "math/matrix3x3.h"
-#include "math/matrix_stack.h"
 
 #endif

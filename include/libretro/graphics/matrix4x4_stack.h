@@ -39,35 +39,13 @@
 
 #pragma once
 
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
+#ifndef __LIBRETRO_GRAPHICS_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/graphics.h> instead."
 #endif
 
-namespace retro::image
+namespace retro::graphics
 {
-	
-	class LIBRETRO_IMAGE_API bitmap
-	{
-	public:
 
-		bitmap() = delete;
-		explicit bitmap(const math::size2s& size);
-		explicit bitmap(const std::filesystem::path& path);
-		~bitmap();
-		bitmap(const bitmap&) = delete;
-		bitmap& operator=(const bitmap&) = delete;
-
-		math::size2s size() const noexcept;
-		std::size_t size_bytes() const noexcept;
-		std::span<const std::byte> data() const;
-		void flip_vertically();
-		void flip_horizontally();
-
-	private:
-
-		class impl;
-		std::unique_ptr<impl> m_pimpl;
-
-	};
+	using matrix4x4_stack = std::stack<matrix4x4>;
 
 }

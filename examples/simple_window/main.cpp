@@ -1,7 +1,10 @@
 #include <libretro/graphics.h>
+#include <boost/log/trivial.hpp>
 
 int main(int argc, char* argv[])
 {
+	int ret = EXIT_SUCCESS;
+
 	try
 	{
 		retro::graphics::window window("Simple Window", { 640, 480 }, false, false);
@@ -17,7 +20,8 @@ int main(int argc, char* argv[])
 	catch (const std::exception& e)
 	{
 		BOOST_LOG_TRIVIAL(error) << e.what();
+		ret = EXIT_FAILURE;
 	}
 
-	return EXIT_SUCCESS;
+	return ret;
 }

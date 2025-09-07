@@ -37,63 +37,65 @@
  *
  */
 
-#pragma once
-
-#ifndef __LIBRETRO_IMAGE_H_INCLUDED__
-#error "Do not include this file directly, include <libretro/image.h> instead."
-#endif
+#include "pch.h"
+#include "bitmap.impl.h"
 
 namespace retro::image
 {
 
-	struct pixel
+	bitmap::impl::impl(const math::size2s& size)
+		: m_image(size.w, size.h)
 	{
-#pragma region Constructors
+	}
 
-		constexpr pixel() noexcept;
-		constexpr pixel(const pixel& other) noexcept;
-		constexpr explicit pixel(std::uint32_t value) noexcept;
-		constexpr pixel(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE) noexcept;
-		~pixel() = default;
+	bitmap::impl::impl(const std::filesystem::path& path)
+	{
+		if (".png" == path.extension())
+		{
+			boost::gil::read_and_convert_image(path.string(), m_image, boost::gil::png_tag{});
+		}
+		else if (".jpg" == path.extension() || ".jpeg" == path.extension())
+		{
+			boost::gil::read_and_convert_image(path.string(), m_image, boost::gil::jpeg_tag{});
+		}
+		else if (".bmp" == path.extension())
+		{
+			boost::gil::read_and_convert_image(path.string(), m_image, boost::gil::bmp_tag{});
+		}
+		else
+		{
+			throw std::runtime_error(std::format("\"{}\" extension not supported", path.extension().string()));
+		}
+	}
 
-#pragma endregion
-#pragma region Attributes
+	math::size2s bitmap::impl::size() const noexcept
+	{
+		return math::size2s(m_image.width(), m_image.height());
+	}
 
-		static constexpr const std::uint8_t ALPHA_OPAQUE = 255;
-		static constexpr const std::uint8_t ALPHA_TRANSPARENT = 0;
+	std::size_t bitmap::impl::size_bytes() const noexcept
+	{
+		return size().w * size().h * sizeof(boost::gil::rgba8_pixel_t);
+	}
 
-		std::uint8_t r;
-		std::uint8_t g;
-		std::uint8_t b;
-		std::uint8_t a;
+	std::span<const std::byte> bitmap::impl::data() const
+	{
+		const auto* ptr = reinterpret_cast<const std::byte*>(
+			boost::gil::interleaved_view_get_raw_data(boost::gil::const_view(m_image)));
 
-#pragma endregion
-#pragma region Operations
+		return { ptr, size_bytes() };
+	}
 
-		[[nodiscard]] constexpr bool is_opaque() const noexcept;
-		[[nodiscard]] constexpr bool is_transparent() const noexcept;
-		[[nodiscard]] constexpr std::uint32_t to_integer() const noexcept;
-		constexpr void from_integer(std::uint32_t value) noexcept;
+	void bitmap::impl::flip_vertically()
+	{
+		const auto flipped = boost::gil::flipped_up_down_view(boost::gil::const_view(m_image));
+		boost::gil::copy_pixels(flipped, boost::gil::view(m_image));
+	}
 
-#pragma endregion
-#pragma region Overridables
-	
-		[[nodiscard]] constexpr pixel operator+(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator-(const pixel& other) noexcept;
-		[[nodiscard]] constexpr pixel operator*(const pixel& other) noexcept;
-		constexpr pixel& operator+=(const pixel& other) noexcept;
-		constexpr pixel& operator-=(const pixel& other) noexcept;
-		constexpr pixel& operator*=(const pixel& other) noexcept;
-		[[nodiscard]] constexpr bool operator==(const pixel& other) const noexcept;
-		[[nodiscard]] constexpr bool operator!=(const pixel& other) const noexcept;
-
-#pragma endregion
-	};
-
-	using color = pixel;
-
-	std::ostream& operator<<(std::ostream& stream, const pixel& pixel) noexcept;
+	void bitmap::impl::flip_horizontally()
+	{
+		const auto flipped = boost::gil::flipped_left_right_view(boost::gil::const_view(m_image));
+		boost::gil::copy_pixels(flipped, boost::gil::view(m_image));
+	}
 
 }
-
-#include "pixel.inl"

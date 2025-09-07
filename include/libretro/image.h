@@ -50,9 +50,10 @@
 #include <vector>
 #include <span>
 
+#include <libretro/math.h>
+
 #include "image/export.h"
-#include "image/pixel.h"
-#include "image/bitmap.h"
 #include "image/color.h"
+#include "image/bitmap.h"
 
 #endif

@@ -334,43 +334,43 @@ namespace retro::graphics
 		glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_id, 0));
 	}
 
-	void gl::delete_buffer(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_buffer(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteBuffers(1, &id));
+		glDeleteBuffers(1, &id);
 	}
 
-	void gl::delete_vertex_array(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_vertex_array(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteVertexArrays(1, &id));
+		glDeleteVertexArrays(1, &id);
 	}
 
-	void gl::delete_texture(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_texture(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteTextures(1, &id));
+		glDeleteTextures(1, &id);
 	}
 
-	void gl::delete_shader(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_shader(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteShader(id));
+		glDeleteShader(id);
 	}
 
-	void gl::delete_program(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_program(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteProgram(id));
+		glDeleteProgram(id);
 	}
 
-	void gl::delete_framebuffer(std::uint32_t id) GL_NOEXCEPT
+	void gl::delete_framebuffer(std::uint32_t id) noexcept
 	{
 		Expects(id != 0);
-		glCheck(glDeleteFramebuffers(1, &id));
+		glDeleteFramebuffers(1, &id);
 	}
 
-	std::uint32_t gl::native_from(topology topology) GL_NOEXCEPT
+	std::uint32_t gl::native_from(topology topology) noexcept
 	{
 		static constexpr std::array<std::uint32_t, static_cast<std::size_t>(topology::COUNT)> TOPOLOGIES =
 		{
@@ -380,17 +380,14 @@ namespace retro::graphics
 			GL_LINE_LOOP,
 			GL_TRIANGLES,
 			GL_TRIANGLE_STRIP,
-			GL_TRIANGLE_FAN,
-			GL_QUADS,
-			GL_QUAD_STRIP,
-			GL_POLYGON
+			GL_TRIANGLE_FAN
 		};
 
 		const auto index = std::to_underlying(topology);
 		return TOPOLOGIES[index];
 	}
 
-	gl::factors gl::native_from(blend blend) GL_NOEXCEPT
+	gl::factors gl::native_from(blend blend) noexcept
 	{
 		static constexpr std::array<factors, static_cast<std::size_t>(blend::COUNT)> BLEND_MODES =
 		{ {
@@ -404,7 +401,7 @@ namespace retro::graphics
 		return BLEND_MODES[index];
 	}
 
-	std::uint32_t gl::native_from(shader type) GL_NOEXCEPT
+	std::uint32_t gl::native_from(shader type) noexcept
 	{
 		static constexpr std::array<std::uint32_t, static_cast<std::size_t>(shader::COUNT)> SHADERS =
 		{

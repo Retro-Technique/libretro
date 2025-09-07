@@ -50,5 +50,4 @@ target_precompile_headers(${PROJECT_NAME}-graphics
 target_compile_definitions(${PROJECT_NAME}-graphics
 	PRIVATE
 		LIBRETRO_GRAPHICS_EXPORTS
-		-D_CRT_SECURE_NO_WARNINGS
 )

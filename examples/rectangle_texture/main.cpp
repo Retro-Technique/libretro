@@ -6,9 +6,11 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		rg::window window("OpenGL Triangle", { 640, 480 }, false, false);
+		rg::window window("Rectangle Texture", { 640, 480 }, false, false);
 		rg::renderer renderer(window);
 		
+		ri::bitmap bitmap(RESOURCE_DIRECTORY "/wall.jpg");
+
 		const rg::matrix4x4 projection = rg::matrix4x4::ortho(0.f, 640.f, 480.f, 0.f);
 		const rg::matrix4x4 view;
 
@@ -16,7 +18,8 @@ int main(int argc, char* argv[])
 		const rg::fragment_shader_source fs(FRAGMENT_SHADER);
 		const rg::shader_program sp(fs, vs);
 		const rg::vertex_buffer vbo(VERTICES);
-		const rg::vertex_array vao(rg::topology::triangles, vbo, sp, "vPos", "vCol");
+		const rg::texture tex(bitmap.data(), bitmap.size(), false, true);
+		const rg::vertex_array vao(rg::topology::triangle_strip, vbo, sp, "vPos", "vCol", tex, "vTexCoord");		
 		const rg::blend_mode bm(rg::blend::alpha);
 		const rg::matrix4x4 model;
 
@@ -25,7 +28,7 @@ int main(int argc, char* argv[])
 			window.poll_events();
 			renderer.viewport({ 0, 0, 640, 480 });
 			renderer.clear();
-			renderer.draw(vbo, vao, bm, sp, model, view, projection);
+			renderer.draw(vbo, vao, bm, sp, tex, model, view, projection);
 			window.swap_buffers();
 		}
 	}

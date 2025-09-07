@@ -7,9 +7,7 @@ add_executable(${PROJECT_NAME}-math-tests
     "line.test.cpp" 
     "circle.test.cpp"
     "distance.test.cpp"
-    "collide.test.cpp"
-    "matrix3x3.test.cpp"
-    "matrix_stack.test.cpp"
+    "collide.test.cpp" 
 )
 
 target_link_libraries(${PROJECT_NAME}-math-tests

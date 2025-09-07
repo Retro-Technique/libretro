@@ -10,6 +10,8 @@
     "glad",
     "glfw3",
     "glm",
-    "ms-gsl"
+    "libpng",
+    "ms-gsl",
+    "libjpeg-turbo"
   ]
 }

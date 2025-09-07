@@ -153,8 +153,7 @@ namespace retro::math
 	template<typename T>
 	[[nodiscard]] constexpr bool operator!=(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
 	{
-		return (lhs.x != rhs.x) || (lhs.y != rhs.y);
+		return !(lhs == rhs);
 	}
-
 
 }

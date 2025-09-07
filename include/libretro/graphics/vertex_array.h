@@ -73,7 +73,7 @@ namespace retro::graphics
 			m_handler.topology = gl::native_from(topology);
 		}
 
-		explicit resource(const vertex_buffer& vbo, topology topology, const shader_program& sp, std::string_view position, std::string_view color) GL_NOEXCEPT
+		explicit resource(topology topology, const vertex_buffer& vbo, const shader_program& sp, std::string_view position, std::string_view color) GL_NOEXCEPT
 			: resource(topology)
 		{
 			resource_binder bind_vao(*this);
@@ -88,11 +88,12 @@ namespace retro::graphics
 			gl::vertex_attrib_pointer_color(color_location);
 		}
 
-		explicit resource(const vertex_buffer& vbo, topology topology, const shader_program& sp, std::string_view position, std::string_view color, std::string_view texture) GL_NOEXCEPT
-			: resource(vbo, topology, sp, position, color)
+		explicit resource(topology topology, const vertex_buffer& vbo, const shader_program& sp, std::string_view position, std::string_view color, const texture& tex, std::string_view texture) GL_NOEXCEPT
+			: resource(topology, vbo, sp, position, color)
 		{
 			resource_binder bind_vao(*this);
 			resource_binder bind_vbo(vbo);
+			resource_binder bind_tex(tex);
 
 			const std::int32_t tex_location = sp.attribute_location(texture);
 
