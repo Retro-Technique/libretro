@@ -80,7 +80,8 @@ namespace retro::graphics
 				  const shader_program& sp,
 				  const matrix4x4& model,
 				  const matrix4x4& view,
-				  const matrix4x4& projection) const GL_NOEXCEPT
+				  const matrix4x4& projection,
+				  std::string_view mvp_name = "MVP") const GL_NOEXCEPT
 		{
 			resource_binder bind_vbo(vbo);
 			resource_binder bind_vao(vao);
@@ -88,7 +89,7 @@ namespace retro::graphics
 			resource_binder bind_sp(sp);
 
 			const matrix4x4 mvp = model * view * projection;
-			sp.set("MVP", mvp);
+			sp.set(mvp_name, mvp);
 
 			gl::draw_arrays(vao.topology(), vbo.vertex_count());
 		}
@@ -100,7 +101,8 @@ namespace retro::graphics
 				  const texture& tex,
 				  const matrix4x4& model,
 				  const matrix4x4& view,
-				  const matrix4x4& projection) const GL_NOEXCEPT
+				  const matrix4x4& projection,
+				  std::string_view mvp_name = "MVP") const GL_NOEXCEPT
 		{
 			resource_binder bind_vbo(vbo);
 			resource_binder bind_vao(vao);
@@ -109,7 +111,7 @@ namespace retro::graphics
 			resource_binder bind_tex(tex);
 
 			const matrix4x4 mvp = model * view * projection;
-			sp.set("MVP", mvp);
+			sp.set(mvp_name, mvp);
 
 			gl::draw_arrays(vao.topology(), vbo.vertex_count());
 		}
