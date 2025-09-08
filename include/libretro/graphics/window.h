@@ -50,13 +50,18 @@ namespace retro::graphics
 	{
 	public:
 
+		window() = delete;
+		window(const window&) = delete;
+		window& operator=(const window&) = delete;
+		window(window&&) noexcept = default;
+		window& operator=(window&&) noexcept = default;
+
 		window(std::string_view title, math::size2s window_size, bool fullscreen, bool resizable)
 			: m_window(nullptr, nullptr)
 		{
 			gl::initialize();
 
-			gl::window_ptr window = gl::create_window(title, window_size, fullscreen, resizable, 0);
-			m_window = std::move(window);
+			m_window = gl::create_window(title, window_size, fullscreen, resizable, 0);
 
 			gl::make_context_current(m_window);
 		}
@@ -65,11 +70,6 @@ namespace retro::graphics
 		{
 			gl::terminate();
 		}
-
-		window(const window&) = delete;
-		window& operator=(const window&) = delete;
-		window(window&&) noexcept = default;
-		window& operator=(window&&) noexcept = default;
 
 		void poll_events() const noexcept
 		{
@@ -81,7 +81,7 @@ namespace retro::graphics
 			return gl::should_close(m_window);
 		}
 
-		void swap_buffers() noexcept
+		void swap_buffers() const noexcept
 		{
 			gl::swap_buffers(m_window);
 		}

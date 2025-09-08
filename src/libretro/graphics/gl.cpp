@@ -241,12 +241,12 @@ namespace retro::graphics
 
 	void gl::tex_parameter_wrap_s(bool repeated) GL_NOEXCEPT
 	{
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeated ? GL_REPEAT : GL_CLAMP));
+		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 	}
 
 	void gl::tex_parameter_wrap_t(bool repeated) GL_NOEXCEPT
 	{
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP));
+		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeated ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 	}
 
 	void gl::shader_source(std::uint32_t id, std::string_view src) GL_NOEXCEPT
