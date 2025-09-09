@@ -51,6 +51,8 @@ namespace retro::graphics
 		std::uint32_t srcfactor;
 		std::uint32_t dstfactor;
 	};
+	static_assert(std::is_trivial_v<blend_mode_t>, "blend_mode_t is not trivial");
+	static_assert(std::is_standard_layout_v<blend_mode_t>, "blend_mode_t is not standard layout");
 
 	template<>
 	class resource<blend_mode_t>

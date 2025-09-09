@@ -50,6 +50,8 @@ namespace retro::graphics
 	{
 		std::uint32_t id;
 	};
+	static_assert(std::is_trivial_v<shader_program_t>, "shader_program_t is not trivial");
+	static_assert(std::is_standard_layout_v<shader_program_t>, "shader_program_t is not standard layout");
 
 	template<>
 	class resource<shader_program_t>

@@ -15,12 +15,13 @@ set(SRC
 
 add_library(${PROJECT_NAME}-image 
 	SHARED 
-		${SRC}
+		${SRC}		
 )
 
 target_include_directories(${PROJECT_NAME}-image  
 	PUBLIC 
-		${PROJECT_SOURCE_DIR}/include
+		"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+		"$<INSTALL_INTERFACE:include>"
 )
 
 target_link_libraries(${PROJECT_NAME}-image 
@@ -49,4 +50,23 @@ target_precompile_headers(${PROJECT_NAME}-image
 target_compile_definitions(${PROJECT_NAME}-image
 	PRIVATE
 		LIBRETRO_IMAGE_EXPORTS
+)
+
+install(
+    TARGETS ${PROJECT_NAME}-image 
+    EXPORT ${PROJECT_NAME}Targets
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/image/
+    DESTINATION include/${PROJECT_NAME}/image
+)
+
+install(
+    FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/image.h
+    DESTINATION include/${PROJECT_NAME}
 )

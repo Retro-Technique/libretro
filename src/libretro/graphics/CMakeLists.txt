@@ -17,9 +17,10 @@ add_library(${PROJECT_NAME}-graphics
 		${SRC}
 )
 
-target_include_directories(${PROJECT_NAME}-graphics  
-	PUBLIC 
-		${PROJECT_SOURCE_DIR}/include
+target_include_directories(${PROJECT_NAME}-graphics
+    PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(${PROJECT_NAME}-graphics 
@@ -50,4 +51,23 @@ target_precompile_headers(${PROJECT_NAME}-graphics
 target_compile_definitions(${PROJECT_NAME}-graphics
 	PRIVATE
 		LIBRETRO_GRAPHICS_EXPORTS
+)
+
+install(
+    TARGETS ${PROJECT_NAME}-graphics
+    EXPORT ${PROJECT_NAME}Targets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} 
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/graphics/
+    DESTINATION include/${PROJECT_NAME}/graphics
+)
+
+install(
+    FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/graphics.h
+    DESTINATION include/${PROJECT_NAME}
 )

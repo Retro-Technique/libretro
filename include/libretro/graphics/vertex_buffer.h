@@ -51,6 +51,8 @@ namespace retro::graphics
 		std::uint32_t	id;
 		std::int32_t	vertex_count;
 	};
+	static_assert(std::is_trivial_v<vertex_buffer_t>, "vertex_buffer_t is not trivial");
+	static_assert(std::is_standard_layout_v<vertex_buffer_t>, "vertex_buffer_t is not standard layout");
 
 	template<>
 	class resource<vertex_buffer_t>

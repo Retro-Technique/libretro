@@ -50,6 +50,8 @@ namespace retro::graphics
 	{
 		std::uint32_t	id;
 	};
+	static_assert(std::is_trivial_v<frame_buffer_t>, "frame_buffer_t is not trivial");
+	static_assert(std::is_standard_layout_v<frame_buffer_t>, "frame_buffer_t is not standard layout");
 
 	template<>
 	class resource<frame_buffer_t>

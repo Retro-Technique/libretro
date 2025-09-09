@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
+cmake_policy(SET CMP0167 NEW)
+
+include(CMakePackageConfigHelpers)
 
 set(PROJECT_NAME libretro)
 set(PROJECT_DESCRIPTION "Modern C++ minimalist utility library for cross-platform development")
@@ -16,13 +19,38 @@ project(${PROJECT_NAME}
 	VERSION ${PROJECT_VERSION}
 )
 
-option(${PROJECT_NAME}_BUILD_TESTS "Build the test suite" ON)
+configure_package_config_file(
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/libretroConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libretro
+)
 
-if(${PROJECT_NAME}_BUILD_TESTS)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/libretroConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libretro
+    RENAME libretroConfig.cmake
+)
+
+install(
+    EXPORT libretroTargets
+    FILE libretroTargets.cmake
+    NAMESPACE libretro::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libretro
+)
+
+option(BUILD_TESTS "Build the test suite" ON)
+option(BUILD_EXAMPLES "Build the example suite" ON)
+option(BUILD_MATH "Build ${PROJECT_NAME}-math" ON)
+option(BUILD_IMAGE "Build ${PROJECT_NAME}-image" ON)
+option(BUILD_GRAPHICS "Build ${PROJECT_NAME}-graphics" ON)
+
+if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
-add_subdirectory(examples)
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 add_subdirectory(src/libretro)

@@ -50,6 +50,8 @@ namespace retro::graphics
 	{
 		std::uint32_t id;
 	};
+	static_assert(std::is_trivial_v<texture_t>, "texture_t is not trivial");
+	static_assert(std::is_standard_layout_v<texture_t>, "texture_t is not standard layout");
 
 	template<>
 	class resource<texture_t>

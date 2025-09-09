@@ -1,4 +1,6 @@
-﻿set(MSVC_WARNINGS 
+﻿include(GNUInstallDirs)
+
+set(MSVC_WARNINGS 
 	/WX								# Traite tous les warnings comme des erreurs
 	/W4								# Active le niveau maximal d’avertissements utile
 	/wd4068							# Supprime l'avertissement de directive de compilation inconnue
@@ -43,7 +45,14 @@ set(GCC_DEBUG_OPTIMISATION
 	-g								# Génère des informations de débogage (DWARF) utilisables par gdb/lldb
 )
 
-add_subdirectory(image)
-add_subdirectory(math)
-add_subdirectory(tiled)
-add_subdirectory(graphics)
+if(BUILD_MATH)
+    add_subdirectory(math)
+endif()
+
+if(BUILD_IMAGE)
+    add_subdirectory(image)
+endif()
+
+if(BUILD_GRAPHICS)
+    add_subdirectory(graphics)
+endif()
