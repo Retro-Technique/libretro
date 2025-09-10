@@ -51,45 +51,76 @@ namespace retro::math
 	{
 		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");
 
-#pragma region Constructors
+		constexpr circle() noexcept
+			: center{ 0, 0 }
+			, radius(0)
+		{
+		}
 
-		constexpr circle() noexcept;
-		constexpr circle(T x, T y, T radius) noexcept;
-		constexpr circle(const vector2<T>& center, T radius) noexcept;
+		constexpr circle(T x, T y, T radius) noexcept
+			: center{ x, y }
+			, radius(radius)
+		{
+		}
+
+		constexpr circle(const vector2<T>& center, T radius) noexcept
+			: center(center)
+			, radius(radius)
+		{
+		}
+
 		template<typename U>
-		constexpr explicit circle(const circle<U>& circle) noexcept;
+		constexpr explicit circle(const circle<U>& circle) noexcept
+			: center(static_cast<vector2<T>>(circle.center))
+			, radius(static_cast<T>(circle.radius))
+		{
+		}
+
 		~circle() = default;
 
-#pragma endregion
-#pragma region Attributes
+		[[nodiscard]] constexpr T diameter() const noexcept
+		{
+			return radius * T(2);
+		}
+
+		[[nodiscard]] constexpr T area() const noexcept
+		{
+			return std::numbers::pi_v<T> * radius * radius;
+		}
+
+		[[nodiscard]] constexpr bool empty() const noexcept
+		{
+			return radius <= T(0);
+		}
+
+		[[nodiscard]] constexpr bool null() const noexcept
+		{
+			return empty() && (center.x == T(0) && center.y == T(0));
+		}
 
 		vector2<T> center;
 		T radius;
-
-#pragma endregion
-#pragma region Operations
-
-		[[nodiscard]] constexpr T diameter() const noexcept;
-		[[nodiscard]] constexpr T area() const noexcept;
-		[[nodiscard]] constexpr bool empty() const noexcept;
-		[[nodiscard]] constexpr bool null() const noexcept;
-
-#pragma endregion
-
 	};
 
 	using intcircle = circle<std::int32_t>;
 	using floatcircle = circle<std::float_t>;
 
 	template<typename T>
-	std::ostream& operator<<(std::ostream& stream, const circle<T>& circle) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const circle<T>& circle) noexcept
+	{
+		return stream << "circle(" << circle.center << ", " << circle.radius << ")";
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator==(const circle<T>& lhs, const circle<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator==(const circle<T>& lhs, const circle<T>& rhs) noexcept
+	{
+		return (lhs.center == rhs.center) && (lhs.radius == rhs.radius);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator!=(const circle<T>& lhs, const circle<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator!=(const circle<T>& lhs, const circle<T>& rhs) noexcept
+	{
+		return !(lhs == rhs);
+	}
 
 }
-
-#include "circle.inl"

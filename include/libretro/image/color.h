@@ -56,12 +56,12 @@ namespace retro::image
 		std::uint8_t b;
 		std::uint8_t a;
 
-		static constexpr std::uint32_t to_integer(const color& color) noexcept
+		static [[no_discard]] constexpr std::uint32_t to_integer(const color& color) noexcept
 		{
 			return (color.r << 24) | (color.g << 16) | (color.b << 8) | color.a;
 		}
 
-		static constexpr color from_integer(std::uint32_t value) noexcept
+		static [[no_discard]] constexpr color from_integer(std::uint32_t value) noexcept
 		{
 			return
 			{
@@ -72,7 +72,7 @@ namespace retro::image
 			};
 		}
 
-		static consteval color make(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE)
+		static [[no_discard]] consteval color make(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = ALPHA_OPAQUE)
 		{
 			return color{ red, green, blue, alpha };
 		}
@@ -89,8 +89,8 @@ namespace retro::image
 
 	};
 
-	static_assert(std::is_trivial_v<color>, "");
-	static_assert(std::is_standard_layout_v<color>, "");
+	static_assert(std::is_trivial_v<color>, "color is not trivial");
+	static_assert(std::is_standard_layout_v<color>, "color is not standard layout");
 		
 	using pixel = color;
 

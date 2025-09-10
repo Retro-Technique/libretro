@@ -51,6 +51,7 @@
 #include <span>
 
 #include "config.h"
+#include "math/angle.h"
 #include "math/vector2.h"
 #include "math/rect.h"
 #include "math/line.h"

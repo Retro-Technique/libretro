@@ -51,42 +51,60 @@ namespace retro::math
 	{
 		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");
 
-#pragma region Constructors
+		constexpr line() noexcept
+			: start{ 0, 0 }
+			, end{ 0, 0 }
+		{
+		}
 
-		constexpr line() noexcept;
-		constexpr line(const vector2<T>& start, const vector2<T>& end) noexcept;
+		constexpr line(const vector2<T>& start, const vector2<T>& end) noexcept
+			: start(start)
+			, end(end)
+		{
+		}
+
 		template<typename U>
-		constexpr explicit line(const line<U>& line) noexcept;
+		constexpr explicit line(const line<U>& line) noexcept
+			: start{ static_cast<T>(line.start) }
+			, end{ static_cast<T>(line.end) }
+		{
+		}
+
 		~line() = default;
 
-#pragma endregion
-#pragma region Attributes
+		[[nodiscard]] constexpr vector2<T> center() const noexcept
+		{
+			return { (start.x + end.x) / T(2), (start.y + end.y) / T(2) };
+		}
+
+		[[nodiscard]] constexpr angle<T> angle() const noexcept
+		{
+			return std::atan2(end.y - start.y, end.x - start.x);
+		}
 
 		vector2<T> start;
 		vector2<T> end;
-
-#pragma endregion
-#pragma region Operators
-
-		[[nodiscard]] constexpr vector2<T> center() const noexcept;
-		[[nodiscard]] constexpr T angle() const noexcept;
-
-#pragma endregion
-
 	};
 
 	using intline = line<std::int32_t>;
 	using floatline = line<std::float_t>;
 
 	template<typename T>
-	std::ostream& operator<<(std::ostream& stream, const line<T>& line) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const line<T>& line) noexcept
+	{
+		return stream << "line(" << line.start.x << ", " << line.start.y << ", " << line.end.x << ", " << line.end.y << ")";
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator==(const line<T>& left, const line<T>& right) noexcept;
+	[[nodiscard]] constexpr bool operator==(const line<T>& lhs, const line<T>& rhs) noexcept
+	{
+		return (lhs.start.x == rhs.start.x) && (lhs.start.y == rhs.start.y) && (lhs.end.x == rhs.end.x) && (lhs.end.y == rhs.end.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator!=(const line<T>& left, const line<T>& right) noexcept;
+	[[nodiscard]] constexpr bool operator!=(const line<T>& lhs, const line<T>& rhs) noexcept
+	{
+		return !(lhs == rhs);
+	}
 
 }
-
-#include "line.inl"

@@ -51,49 +51,95 @@ namespace retro::math
 	{
 		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");
 
-#pragma region Constructors
+		constexpr rect() noexcept : point{ 0, 0 }
+			, size{ 0, 0 }
+		{
+		}
 
-		constexpr rect() noexcept;
-		constexpr rect(T x, T y, T width, T height) noexcept;
-		constexpr rect(const vector2<T>& point, const vector2<T>& size) noexcept;
+		constexpr rect(T x, T y, T width, T height) noexcept
+			: point{ x, y }
+			, size{ width, height }
+		{
+		}
+
+		constexpr rect(const vector2<T>& point, const vector2<T>& size) noexcept
+			: point(point)
+			, size(size)
+		{
+		}
+
 		template<typename U>
-		constexpr explicit rect(const rect<U>& rect) noexcept;
+		constexpr explicit rect(const rect<U>& rect) noexcept
+			: point{ static_cast<T>(rect.point.x), static_cast<T>(rect.point.y) }
+			, size{ static_cast<T>(rect.size.x), static_cast<T>(rect.size.y) }
+		{
+		}
+
 		~rect() = default;
 
-#pragma endregion
-#pragma region Attributes
+		[[nodiscard]] constexpr bool empty() const noexcept
+		{
+			return size.x <= T(0) || size.y <= T(0);
+		}
 
-		vector2<T> point; 
-		vector2<T> size;    
+		[[nodiscard]] constexpr bool null() const noexcept
+		{
+			return point.x == T(0) && point.y == T(0) && size.x == T(0) && size.y == T(0);
+		}
 
-#pragma endregion
-#pragma region Operators
+		[[nodiscard]] constexpr vector2<T> center() const noexcept
+		{
+			return { point.x + size.x / T(2), point.y + size.y / T(2) };
+		}
 
-		[[nodiscard]] constexpr bool empty() const noexcept;
-		[[nodiscard]] constexpr bool null() const noexcept;
-		[[nodiscard]] constexpr vector2<T> center() const noexcept;
-		[[nodiscard]] constexpr T area() const noexcept;
-		[[nodiscard]] constexpr const T& left() const noexcept;
-		[[nodiscard]] constexpr const T& top() const noexcept;
-		[[nodiscard]] constexpr T right() const noexcept;
-		[[nodiscard]] constexpr T bottom() const noexcept;
+		[[nodiscard]] constexpr T area() const noexcept
+		{
+			return size.x * size.y;
+		}
 
-#pragma endregion
+		[[nodiscard]] constexpr const T& left() const noexcept
+		{
+			return point.x;
+		}
 
+		[[nodiscard]] constexpr const T& top() const noexcept
+		{
+			return point.y;
+		}
+
+		[[nodiscard]] constexpr T right() const noexcept
+		{
+			return point.x + size.x;
+		}
+
+		[[nodiscard]] constexpr T bottom() const noexcept
+		{
+			return point.y + size.y;
+		}
+
+		vector2<T> point;
+		vector2<T> size;
 	};
 
 	using intrect = rect<std::int32_t>;
 	using floatrect = rect<std::float_t>;
 
 	template<typename T>
-	std::ostream& operator<<(std::ostream& stream, const rect<T>& rect) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const rect<T>& rect) noexcept
+	{
+		return stream << "rect(" << rect.point.x << ", " << rect.point.y << ", " << rect.size.x << ", " << rect.size.y << ")";
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator==(const rect<T>& lhs, const rect<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator==(const rect<T>& lhs, const rect<T>& rhs) noexcept
+	{
+		return (lhs.point.x == rhs.point.x) && (lhs.point.y == rhs.point.y) && (lhs.size.x == rhs.size.x) && (lhs.size.y == rhs.size.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator!=(const rect<T>& lhs, const rect<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator!=(const rect<T>& lhs, const rect<T>& rhs) noexcept
+	{
+		return !(lhs == rhs);
+	}
 	
 }
-
-#include "rect.inl"

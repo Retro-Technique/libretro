@@ -27,9 +27,9 @@ BOOST_AUTO_TEST_CASE(AngleTest, *boost::unit_test::tolerance(0.0001))
 {
     retro::math::floatline l({ 0.0f, 0.0f }, { 0.0f, 1.0f });
 
-    const float angle = l.angle();
+    const retro::math::anglef angle = l.angle();
 
-    BOOST_TEST(angle == std::numbers::pi_v<float> / 2.0f);
+    BOOST_TEST(angle.rad() == std::numbers::pi_v<std::float_t> / 2.0f);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

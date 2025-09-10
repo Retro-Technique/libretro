@@ -37,66 +37,86 @@
  *
  */
 
+#pragma once
+
+#ifndef __LIBRETRO_MATH_H_INCLUDED__
+#error "Do not include this file directly, include <libretro/math.h> instead."
+#endif
+
 namespace retro::math
 {
+	
+	template<typename T>
+	struct angle
+	{
+		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");	
 
-#pragma region Constructors
+		constexpr angle() noexcept
+			: radians(0)
+		{
+		}
+
+		constexpr angle(T r) noexcept
+			: radians(r)
+		{
+		}
+
+		~angle() = default;
+
+		static [[no_discard]] constexpr angle<T> from_degrees(T value)
+		{
+			return { value * static_cast<T>(std::numbers::pi / 180.0) };
+		}
+
+		static [[no_discard]] constexpr angle<T> from_radians(T value)
+		{
+			return { value };
+		}
+
+		[[no_discard]] constexpr T deg() const noexcept
+		{
+			return radians * static_cast<T>(180.0 / std::numbers::pi);
+		}
+
+		[[no_discard]] constexpr T rad() const noexcept
+		{
+			return radians;
+		}
+
+		[[nodiscard]] constexpr angle<T> normalize() const noexcept
+		{
+			const T two_pi = static_cast<T>(2 * std::numbers::pi);
+			T r = std::fmod(radians, two_pi);
+			if (r < 0)
+			{
+				r += two_pi;
+			}
+
+			return angle<T>::from_radians(r);
+		}
+
+		T radians;
+	};
+
+	using anglef = angle<std::float_t>;
+	using angled = angle<std::double_t>;
 
 	template<typename T>
-	constexpr line<T>::line() noexcept
-		: start{ 0, 0 }
-		, end{ 0, 0 }
+	std::ostream& operator<<(std::ostream& stream, const angle<T>& angle) noexcept
 	{
+		return stream << "angle(" << angle.deg() << "°)";
 	}
 
 	template<typename T>
-	constexpr line<T>::line(const vector2<T>& start, const vector2<T>& end) noexcept
-		: start(start)
-		, end(end)
+	[[nodiscard]] constexpr bool operator==(const angle<T>& lhs, const angle<T>& rhs) noexcept
 	{
+		return lhs.rad() == rhs.rad();
 	}
 
 	template<typename T>
-	template<typename U>
-	constexpr line<T>::line(const line<U>& line) noexcept
-		: start{ static_cast<T>(line.start) }
-		, end{ static_cast<T>(line.end) }
+	[[nodiscard]] constexpr bool operator!=(const angle<T>& lhs, const angle<T>& rhs) noexcept
 	{
-	}
-
-#pragma endregion
-#pragma region Operations
-
-	template<typename T>
-	[[nodiscard]] constexpr vector2<T> line<T>::center() const noexcept
-	{
-		return { (start.x + end.x) / T(2), (start.y + end.y) / T(2) };
-	}
-
-	template<typename T>
-	[[nodiscard]] constexpr T line<T>::angle() const noexcept
-	{
-		return std::atan2(end.y - start.y, end.x - start.x);
-	}
-
-#pragma endregion
-
-	template<typename T>
-	std::ostream& operator<<(std::ostream& stream, const line<T>& line) noexcept
-	{
-		return stream << "line(" << line.start.x << ", " << line.start.y << ", " << line.end.x << ", " << line.end.y << ")";
-	}
-
-	template<typename T>
-	[[nodiscard]] constexpr bool operator==(const line<T>& left, const line<T>& right) noexcept
-	{
-		return (left.start.x == right.start.x) && (left.start.y == right.start.y) && (left.end.x == right.end.x) && (left.end.y == right.end.y);
-	}
-
-	template<typename T>
-	[[nodiscard]] constexpr bool operator!=(const line<T>& left, const line<T>& right) noexcept
-	{
-		return !(left == right);
+		return !(lhs == rhs);
 	}
 
 }

@@ -47,17 +47,27 @@ namespace retro::math
 {
 
 	template<typename T>
-	[[nodiscard]] T euclidian_distance(const vector2<T>& a, const vector2<T>& b) noexcept;
+	[[nodiscard]] T euclidian_distance(T x1, T y1, T x2, T y2) noexcept
+	{
+		return std::sqrt(std::pow((x1 - x2), 2.) + std::pow((y1 - y2), 2.));
+	}
 
 	template<typename T>
-	[[nodiscard]] T euclidian_distance(T x1, T y1, T x2, T y2) noexcept;
+	[[nodiscard]] T euclidian_distance(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return euclidian_distance(lhs.x, lhs.y, rhs.x, rhs.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] T manhattan_distance(const vector2<T>& a, const vector2<T>& b) noexcept;
+	[[nodiscard]] T manhattan_distance(T x1, T y1, T x2, T y2) noexcept
+	{
+		return std::abs(x1 - x2) + std::abs(y1 - y2);
+	}
 
 	template<typename T>
-	[[nodiscard]] T manhattan_distance(T x1, T y1, T x2, T y2) noexcept;
+	[[nodiscard]] T manhattan_distance(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return manhattan_distance(lhs.x, lhs.y, rhs.x, rhs.y);
+	}
 
 }
-
-#include "distance.inl"

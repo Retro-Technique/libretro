@@ -51,10 +51,24 @@ namespace retro::math
 	{
 		static_assert(std::is_arithmetic_v<T>, "T must be an arithmetic type");
 
-		constexpr vector2() noexcept;
-		constexpr vector2(T x, T y) noexcept;
+		constexpr vector2() noexcept
+			: x(0)
+			, y(0)
+		{
+		}
+
+		constexpr vector2(T x, T y) noexcept
+			: x(x)
+			, y(y)
+		{
+		}
+
 		template<typename U>
-		constexpr explicit vector2(const vector2<U>& vector) noexcept;
+		constexpr explicit vector2(const vector2<U>& vector) noexcept : x(static_cast<T>(vector.x))
+			, y(static_cast<T>(vector.y))
+		{
+		}
+
 		~vector2() = default;
 
 		union
@@ -91,44 +105,93 @@ namespace retro::math
 	using size2s = vector2s;
 
 	template<typename T>
-	std::ostream& operator<<(std::ostream& stream, const vector2<T>& vector) noexcept;
+	std::ostream& operator<<(std::ostream& stream, const vector2<T>& vector) noexcept
+	{
+		return stream << "vector2(" << vector.x << ", " << vector.y << ")";
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator+(const vector2<T>& lhs, const vector2<T>& rhs) noexcept;	
+	[[nodiscard]] constexpr vector2<T> operator+(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return vector2<T>(lhs.x + rhs.x, lhs.y + rhs.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator-(const vector2<T>& rhs) noexcept;
+	[[nodiscard]] constexpr vector2<T> operator-(const vector2<T>& rhs) noexcept
+	{
+		return vector2<T>(-rhs.x, -rhs.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator-(const vector2<T>& lhs, const vector2<T>& rhs) noexcept;
+	[[nodiscard]] constexpr vector2<T> operator-(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return vector2<T>(lhs.x - rhs.x, lhs.y - rhs.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator*(const vector2<T>& lhs, T rhs) noexcept;
+	[[nodiscard]] constexpr vector2<T> operator*(const vector2<T>& lhs, T rhs) noexcept
+	{
+		return vector2<T>(lhs.x * rhs, lhs.y * rhs);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator*(T lhs, const vector2<T>& rhs) noexcept;
+	[[nodiscard]] constexpr vector2<T> operator*(T lhs, const vector2<T>& rhs) noexcept
+	{
+		return vector2<T>(rhs.x * lhs, rhs.y * lhs);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr vector2<T> operator/(const vector2<T>& lhs, T rhs) noexcept;
+	[[nodiscard]] constexpr vector2<T> operator/(const vector2<T>& lhs, T rhs) noexcept
+	{
+		return vector2<T>(lhs.x / rhs, lhs.y / rhs);
+	}
 
 	template<typename T>
-	constexpr vector2<T>& operator+=(vector2<T>& lhs, const vector2<T>& rhs) noexcept;
+	constexpr vector2<T>& operator+=(vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		lhs.x += rhs.x;
+		lhs.y += rhs.y;
+
+		return lhs;
+	}
 
 	template<typename T>
-	constexpr vector2<T>& operator-=(vector2<T>& lhs, const vector2<T>& rhs) noexcept;
+	constexpr vector2<T>& operator-=(vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		lhs.x -= rhs.x;
+		lhs.y -= rhs.y;
+
+		return lhs;
+	}
 
 	template<typename T>
-	constexpr vector2<T>& operator*=(vector2<T>& lhs, T rhs) noexcept;
+	constexpr vector2<T>& operator*=(vector2<T>& lhs, T rhs) noexcept
+	{
+		lhs.x *= rhs;
+		lhs.y *= rhs;
+
+		return lhs;
+	}
 
 	template<typename T>
-	constexpr vector2<T>& operator/=(vector2<T>& lhs, T rhs) noexcept;
+	constexpr vector2<T>& operator/=(vector2<T>& lhs, T rhs) noexcept
+	{
+		lhs.x /= rhs;
+		lhs.y /= rhs;
+
+		return lhs;
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator==(const vector2<T>& lhs, const vector2<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator==(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return (lhs.x == rhs.x) && (lhs.y == rhs.y);
+	}
 
 	template<typename T>
-	[[nodiscard]] constexpr bool operator!=(const vector2<T>& lhs, const vector2<T>& rhs) noexcept;
+	[[nodiscard]] constexpr bool operator!=(const vector2<T>& lhs, const vector2<T>& rhs) noexcept
+	{
+		return !(lhs == rhs);
+	}
 
 }
-
-#include "vector2.inl"

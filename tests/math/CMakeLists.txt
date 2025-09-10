@@ -8,6 +8,7 @@ add_executable(${PROJECT_NAME}-math-tests
     "circle.test.cpp"
     "distance.test.cpp"
     "collide.test.cpp" 
+    "angle.test.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}-math-tests
