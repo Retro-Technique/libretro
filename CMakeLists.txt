@@ -5,7 +5,7 @@ include(CMakePackageConfigHelpers)
 
 set(PROJECT_NAME libretro)
 set(PROJECT_DESCRIPTION "Modern C++ minimalist utility library for cross-platform development")
-set(PROJECT_VERSION "1.0.0")
+set(PROJECT_VERSION "0.0.1")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)

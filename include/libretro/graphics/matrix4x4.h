@@ -85,32 +85,32 @@ namespace retro::graphics
 			return result;
 		}
 
-		static constexpr matrix4x4 translation(std::float_t tx, std::float_t ty) noexcept
+		static constexpr matrix4x4 translation(const math::vector2f& offset) noexcept
 		{
 			matrix4x4 mat{};
 
-			mat(3, 0) = tx;
-			mat(3, 1) = ty;
+			mat(3, 0) = offset.x;
+			mat(3, 1) = offset.y;
 
 			return mat;
 		}
 
-		static constexpr matrix4x4 scaling(std::float_t sx, std::float_t sy) noexcept
+		static constexpr matrix4x4 scaling(const math::vector2f& offset) noexcept
 		{
 			matrix4x4 mat{};
 
-			mat(0, 0) = sx;
-			mat(1, 1) = sy;
+			mat(0, 0) = offset.x;
+			mat(1, 1) = offset.y;
 
 			return mat;
 		}
 
-		static matrix4x4 rotation(std::float_t radians) noexcept
+		static matrix4x4 rotation(const math::anglef& angle) noexcept
 		{
 			matrix4x4 mat{};
 
-			const std::float_t c = std::cos(radians);
-			const std::float_t s = std::sin(radians);
+			const std::float_t c = std::cos(angle.rad());
+			const std::float_t s = std::sin(angle.rad());
 
 			mat(0, 0) = c;
 			mat(1, 0) = -s;
