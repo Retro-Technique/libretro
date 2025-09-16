@@ -84,7 +84,7 @@ namespace retro::graphics
 		void set(std::string_view name, std::int32_t value) const GL_NOEXCEPT
 		{
 			const std::int32_t location = gl::uniform_location(m_handler.id, name.data());
-			gl::uniform_1i(location, value);
+			gl::uniform_1i(location, value);			
 		}
 
 		void set(std::string_view name, std::uint32_t value) const GL_NOEXCEPT

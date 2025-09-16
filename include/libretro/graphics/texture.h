@@ -75,11 +75,11 @@ namespace retro::graphics
 			m_handler.id = gl::gen_texture();
 
 			resource_binder binder(*this);
+			gl::tex_image_2D_from_memory(data, math::size2i(size.w, size.h));
 			gl::tex_parameter_min_filter(smoothed);
 			gl::tex_parameter_mag_filter(smoothed);
 			gl::tex_parameter_wrap_s(repeated);
 			gl::tex_parameter_wrap_t(repeated);
-			gl::tex_image_2D_from_memory(data, math::size2i(size.w, size.h));
 		}
 
 		~resource()

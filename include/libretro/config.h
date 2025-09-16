@@ -46,8 +46,3 @@
 	#define LIBRETRO_API_EXPORT __attribute__((__visibility__("default")))
 	#define LIBRETRO_API_IMPORT __attribute__((__visibility__("default")))
 #endif
-
-#ifdef _MSC_VER
-	#pragma warning(disable : 4251) 
-	#pragma warning(disable : 4275)
-#endif

@@ -53,4 +53,4 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-add_subdirectory(src/libretro)
+add_subdirectory(src/${PROJECT_NAME})
